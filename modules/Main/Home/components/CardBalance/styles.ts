@@ -26,20 +26,27 @@ export const AllMoney = styled.Text`
   margin-bottom: 10px;
 `;
 
-export const Align = styled.View`
-  flex: 1;
+export const WrapperVisibleLineCurrency = styled.View`
   flex-direction: row;
+  align-items: center;
   justify-content: space-between;
+`;
+
+export const LineCurrency = styled.View`
+  background-color: #fafafa;
+  width: 75%;
+  height: 3px;
+  border-radius: 3px;
+  margin-left: 10px;
+  margin-right: 10px;
 `;
 
 export const TodaysMoney = styled.Text`
   font-size: 20px;
   color: #fafafa;
-  margin-bottom: 10px;
 `;
 
 export const Percentage = styled.Text`
-  margin-top: 3px;
   font-size: 12px;
   color: #018b3c;
 `;

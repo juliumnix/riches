@@ -7,14 +7,14 @@ type CardBalanceProps = {
   balance: number;
   currency: number;
   percentage: number;
-  visibleLineBalance?: boolean;
+  visibleLine?: boolean;
 };
 
 export default function CardBalance({
   balance,
   currency,
   percentage,
-  visibleLineBalance,
+  visibleLine,
 }: CardBalanceProps) {
   function navigateToTransactions() {
     console.log('navigate to transactions');
@@ -24,7 +24,7 @@ export default function CardBalance({
     <S.Wrapper onPress={navigateToTransactions}>
       <S.Container>
         <S.Title>Saldo total:</S.Title>
-        {visibleLineBalance ? (
+        {visibleLine ? (
           <S.WrapperVisibleLineBalance>
             <S.AllMoney>R$:</S.AllMoney>
             <S.LineBalance />
@@ -34,10 +34,19 @@ export default function CardBalance({
         )}
 
         <S.Title>Hoje:</S.Title>
-        <S.Align>
-          <S.TodaysMoney>R$: {currency}</S.TodaysMoney>
-          <S.Percentage>{percentage}%</S.Percentage>
-        </S.Align>
+
+        {visibleLine ? (
+          <S.WrapperVisibleLineCurrency>
+            <S.TodaysMoney>R$:</S.TodaysMoney>
+            <S.LineCurrency></S.LineCurrency>
+            <S.Percentage>🤫</S.Percentage>
+          </S.WrapperVisibleLineCurrency>
+        ) : (
+          <S.WrapperVisibleLineCurrency>
+            <S.TodaysMoney>R$: {currency}</S.TodaysMoney>
+            <S.Percentage>{percentage}%</S.Percentage>
+          </S.WrapperVisibleLineCurrency>
+        )}
       </S.Container>
     </S.Wrapper>
   );
