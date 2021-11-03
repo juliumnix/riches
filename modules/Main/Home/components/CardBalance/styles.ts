@@ -1,6 +1,8 @@
 import styled from 'styled-components/native';
 import { LinearGradient } from 'expo-linear-gradient';
 
+export const Wrapper = styled.TouchableOpacity``;
+
 export const Container = styled(LinearGradient).attrs({
   colors: ['#1A9949', '#B6E2C6'],
 })`
@@ -40,4 +42,19 @@ export const Percentage = styled.Text`
   margin-top: 3px;
   font-size: 12px;
   color: #018b3c;
+`;
+
+export const WrapperVisibleLineBalance = styled.View`
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  padding-left: 1px;
+`;
+
+export const LineBalance = styled.View`
+  background-color: #fafafa;
+  width: 80%;
+  height: 5px;
+  border-radius: 5px;
+  margin-left: 10px;
 `;

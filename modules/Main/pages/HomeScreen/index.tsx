@@ -6,7 +6,12 @@ import CardBalance from '../../Home/components/CardBalance';
 export default function LoginScreen() {
   return (
     <S.Container>
-      <CardBalance />
+      <CardBalance
+        balance={99}
+        currency={78}
+        percentage={10}
+        visibleLineBalance
+      />
       <StatusBar style="auto" />
     </S.Container>
   );
