@@ -1,7 +1,7 @@
 import { StatusBar } from 'expo-status-bar';
 import React from 'react';
 import * as S from './styles';
-import CardBalance from '../../Home/components/CardBalance';
+import CardBalance from '../../components/CardBalance';
 
 export default function LoginScreen() {
   return (
