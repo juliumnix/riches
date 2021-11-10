@@ -72,7 +72,7 @@ const SearchPhoto = ({ visible, onClose, onPressItem }: SearchPhotoProps) => {
 
   async function searchPhoto() {
     const response = await api.get(
-      `?page=1&query=${search}&client_id=BcnC6FQ7-O_azu18-Jgr4AVqvDI4b2d3OzYf2wckZ9w`,
+      `https://api.unsplash.com/search/photos?page=1&query=${search}&client_id=BcnC6FQ7-O_azu18-Jgr4AVqvDI4b2d3OzYf2wckZ9w`,
     );
     const mappedPhotos = response.data.results.map((photo: PhotoProps) => {
       return {
