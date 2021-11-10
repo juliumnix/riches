@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 const api = axios.create({
-  baseURL: 'https://api.unsplash.com/search/photos',
+  baseURL: '',
 });
 
 export default api;
