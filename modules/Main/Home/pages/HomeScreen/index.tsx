@@ -3,7 +3,7 @@ import React from 'react';
 import * as S from './styles';
 import CardBalance from '../../components/CardBalance';
 
-export default function LoginScreen() {
+export default function HomeScreen() {
   return (
     <S.Container>
       <CardBalance balance={99} currency={78} percentage={10} visibleLine />

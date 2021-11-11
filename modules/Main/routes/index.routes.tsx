@@ -1,9 +1,10 @@
 import React from 'react';
-import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import HomeScreen from '../Home/pages/HomeScreen';
-import GoalsPage from '../Goals/pages/GoalsPage';
-import CreateGoal from '../Goals/pages/CreateGoal';
-import CryptoPage from '../Crypto/pages/CryptoPage';
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import { HomeRoutes } from '../Home/routes/index.routes';
+import { CryptoStack } from '../Crypto/routes/index.routes';
+import { GoalStack } from '../Goals/routes/index.routes';
+
+import { Ionicons, Feather, FontAwesome5 } from '@expo/vector-icons';
 
 export type RootStackParamList = {
   CryptoPage: undefined;
@@ -12,34 +13,65 @@ export type RootStackParamList = {
   Home: undefined;
 };
 
-const Stack = createNativeStackNavigator<RootStackParamList>();
+const Tab = createBottomTabNavigator();
 
 export function MainRoutes() {
   return (
-    <Stack.Navigator>
-      <Stack.Screen
-        options={{ headerShown: false }}
-        name="CryptoPage"
-        component={CryptoPage}
-      />
-
-      {/* rotas de goals */}
-      <Stack.Screen
-        options={{ headerShown: false }}
-        name="GoalsPage"
-        component={GoalsPage}
-      />
-      <Stack.Screen
-        options={{ headerShown: false }}
-        name="CreateGoal"
-        component={CreateGoal}
-      />
-
-      <Stack.Screen
-        options={{ headerShown: false }}
+    <Tab.Navigator
+      screenOptions={{
+        tabBarActiveTintColor: '#018B3C',
+        tabBarInactiveTintColor: '#B0B0B0',
+        headerShown: false,
+        tabBarShowLabel: false,
+        tabBarStyle: {
+          backgroundColor: '#fff',
+          borderTopEndRadius: 20,
+          borderTopStartRadius: 20,
+          borderTopColor: '#fff',
+        },
+      }}
+    >
+      <Tab.Screen
+        options={{
+          tabBarIcon: ({ color }) => (
+            <Feather name="home" size={24} color={color} />
+          ),
+        }}
         name="Home"
-        component={HomeScreen}
+        component={HomeRoutes}
       />
-    </Stack.Navigator>
+      <Tab.Screen
+        options={{
+          tabBarIcon: ({ color }) => (
+            <FontAwesome5 name="money-bill-alt" size={24} color={color} />
+          ),
+        }}
+        name="Crypto"
+        component={CryptoStack}
+      />
+
+      <Tab.Screen
+        options={{
+          tabBarIcon: ({ color }) => (
+            <Ionicons name="cloud-outline" size={24} color={color} />
+          ),
+        }}
+        listeners={({ navigation, route }) => ({
+          tabPress: e => {
+            e.preventDefault();
+
+            const isFocus = navigation.isFocused();
+
+            if (isFocus) {
+              navigation.navigate('GoalsPage');
+            } else {
+              navigation.navigate('Goal');
+            }
+          },
+        })}
+        name="Goal"
+        component={GoalStack}
+      />
+    </Tab.Navigator>
   );
 }
