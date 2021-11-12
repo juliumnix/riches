@@ -1,4 +1,5 @@
-import React, { useEffect, useState } from 'react';
+import { useFocusEffect, useNavigation } from '@react-navigation/core';
+import React, { useCallback, useEffect, useState } from 'react';
 import { View, Text, FlatList } from 'react-native';
 import Loading from '../../../components/Loading';
 import api from '../../../utils/api';
@@ -23,12 +24,22 @@ const CryptoPage = () => {
   const [data, setData] = useState([] as CryptoDataProps[]);
   const [dolar, setDolar] = useState(0);
   const [loading, setLoading] = useState(true);
-  useEffect(() => {
-    getCryptoData();
-  }, []);
+  const navigation = useNavigation();
+  useFocusEffect(
+    useCallback(() => {
+      if (navigation.isFocused()) {
+        getCryptoData();
+      }
+    }, []),
+  );
+
+  // useEffect(() => {
+
+  // }, []);
 
   async function getCryptoData() {
     try {
+      setLoading(true);
       const response = await api.get('https://data.messari.io/api/v2/assets');
 
       const dolarToday = await api.get(
