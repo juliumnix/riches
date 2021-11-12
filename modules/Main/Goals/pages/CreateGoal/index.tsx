@@ -106,6 +106,14 @@ const CreateGoal = () => {
     navigation.goBack();
   }
 
+  function reviewParams() {
+    if (goalName == '' || portion == 0 || image == '' || goalValue == 0) {
+      return false;
+    }
+
+    return true;
+  }
+
   return (
     <>
       <S.Container>
@@ -168,11 +176,13 @@ const CreateGoal = () => {
         </S.WrapperPortionSelector>
       </S.Container>
 
-      <S.WrapperButtonConfirm>
-        <S.ButtonConfirm onPress={() => handleConfirm()}>
-          <S.TextButtonConfirm>Criar meta</S.TextButtonConfirm>
-        </S.ButtonConfirm>
-      </S.WrapperButtonConfirm>
+      {reviewParams() == true && (
+        <S.WrapperButtonConfirm>
+          <S.ButtonConfirm onPress={() => handleConfirm()}>
+            <S.TextButtonConfirm>Criar meta</S.TextButtonConfirm>
+          </S.ButtonConfirm>
+        </S.WrapperButtonConfirm>
+      )}
     </>
   );
 };

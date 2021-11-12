@@ -3,7 +3,7 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { HomeRoutes } from '../Home/routes/index.routes';
 import { CryptoStack } from '../Crypto/routes/index.routes';
 import { GoalStack } from '../Goals/routes/index.routes';
-
+import { getFocusedRouteNameFromRoute } from '@react-navigation/native';
 import { Ionicons, Feather, FontAwesome5 } from '@expo/vector-icons';
 
 export type RootStackParamList = {
@@ -14,6 +14,12 @@ export type RootStackParamList = {
 };
 
 const Tab = createBottomTabNavigator();
+
+const getTabBarStyle = route => {
+  const routeName = getFocusedRouteNameFromRoute(route) ?? 'Home';
+  let display = routeName === 'CreateGoal' ? 'none' : 'flex';
+  return { display };
+};
 
 export function MainRoutes() {
   return (
@@ -51,23 +57,11 @@ export function MainRoutes() {
       />
 
       <Tab.Screen
-        options={{
+        options={({ route }) => ({
+          tabBarStyle: getTabBarStyle(route),
           tabBarIcon: ({ color }) => (
             <Ionicons name="cloud-outline" size={24} color={color} />
           ),
-        }}
-        listeners={({ navigation, route }) => ({
-          tabPress: e => {
-            e.preventDefault();
-
-            const isFocus = navigation.isFocused();
-
-            if (isFocus) {
-              navigation.navigate('GoalsPage');
-            } else {
-              navigation.navigate('Goal');
-            }
-          },
         })}
         name="Goal"
         component={GoalStack}
