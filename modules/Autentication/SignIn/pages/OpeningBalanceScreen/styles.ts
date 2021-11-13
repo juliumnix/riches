@@ -36,8 +36,3 @@ export const Next = styled.TouchableOpacity`
   align-self: flex-end;
   margin-right: 30px;
 `;
-
-export const Arrow = styled.Text`
-  color: #018b3c;
-  font-size: 20px;
-`;

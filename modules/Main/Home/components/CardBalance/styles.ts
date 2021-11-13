@@ -49,6 +49,7 @@ export const TodaysMoney = styled.Text`
 export const Percentage = styled.Text`
   font-size: 12px;
   color: #018b3c;
+  margin-left: 8px;
 `;
 
 export const WrapperVisibleLineBalance = styled.View`
@@ -64,4 +65,8 @@ export const LineBalance = styled.View`
   height: 5px;
   border-radius: 5px;
   margin-left: 10px;
+`;
+
+export const wrapperPercentage = styled.View`
+  flex-direction: row;
 `;
