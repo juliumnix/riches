@@ -1,3 +1,4 @@
+import { useNavigation } from '@react-navigation/core';
 import React from 'react';
 import { SvgXml } from 'react-native-svg';
 
@@ -16,6 +17,8 @@ export default function CardBalance({
   percentage,
   visibleLine,
 }: CardBalanceProps) {
+  const navigation = useNavigation();
+
   function ArrowUpSVG() {
     const svg = `
     <svg width="20" height="15" viewBox="0 0 20 15" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -27,7 +30,7 @@ export default function CardBalance({
   }
 
   function navigateToTransactions() {
-    console.log('navigate to transactions');
+    navigation.navigate('paginaTemporaria');
   }
 
   return (

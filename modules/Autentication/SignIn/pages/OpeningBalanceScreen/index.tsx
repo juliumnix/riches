@@ -2,8 +2,11 @@ import { StatusBar } from 'expo-status-bar';
 import React from 'react';
 import * as S from './styles';
 import { SvgXml } from 'react-native-svg';
+import { useGoal } from '../../../../Main/hooks/goal';
 
 export default function OpeningBalanceScreen() {
+  //remover essa desgraça aqui
+  const { handleGoalValue } = useGoal();
   function ArrowSVG() {
     const svg = `
     <svg width="30" height="30" viewBox="0 0 30 30" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -19,7 +22,12 @@ export default function OpeningBalanceScreen() {
     <S.Container>
       <S.Title>Qual seu saldo inicial</S.Title>
       <S.ContainerMoney>
-        <S.Money>R$ 0,00</S.Money>
+        <S.Money
+          onChangeText={text => {
+            handleGoalValue(Number(text));
+          }}
+          placeholder="R$: 0,00"
+        />
         <S.Line></S.Line>
       </S.ContainerMoney>
       <S.Next>
