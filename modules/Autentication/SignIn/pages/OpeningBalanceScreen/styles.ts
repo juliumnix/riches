@@ -3,14 +3,22 @@ import styled from 'styled-components/native';
 export const Container = styled.View`
   flex: 1;
   background-color: #fafafa;
-  align-items: center;
+`;
+
+export const WrapperContent = styled.View`
+  flex: 1;
+  justify-content: center;
+`;
+
+export const WrapperNextButton = styled.View`
+  padding-bottom: 10%;
 `;
 
 export const Title = styled.Text`
-  margin-top: 321px;
-  margin-bottom: 39px;
   color: #1c1c1c;
   font-size: 24px;
+  text-align: center;
+  padding-bottom: 10%;
 `;
 
 export const Money = styled.TextInput`
@@ -25,14 +33,15 @@ export const Line = styled.View`
 `;
 
 export const ContainerMoney = styled.View`
-  width: 81.77%;
   height: 47px;
-  margin-bottom: 270px;
+  padding-left: 20px;
+  padding-right: 20px;
 `;
 
 export const Next = styled.TouchableOpacity`
   width: 30px;
   height: 30px;
   align-self: flex-end;
-  margin-right: 30px;
+  justify-content: flex-end;
+  padding-right: 15%;
 `;

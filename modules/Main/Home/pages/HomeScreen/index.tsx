@@ -74,7 +74,7 @@ export default function HomeScreen() {
         <S.WrapperFirstLine>
           <S.WrapperHelloName>
             <HelloSVG />
-            <S.Name>Mateus</S.Name>
+            <S.Name>Usuário</S.Name>
           </S.WrapperHelloName>
           <TouchableOpacity onPress={handleSetBalanceVisibility}>
             {balanceVisibility == true ? <CloseViewSVG /> : <ViewSVG />}

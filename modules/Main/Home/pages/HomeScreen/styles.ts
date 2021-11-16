@@ -3,8 +3,9 @@ import styled from 'styled-components/native';
 export const Container = styled.View`
   flex: 1;
   background-color: #ffffff;
-  padding-left: 42px;
-  padding-right: 42px;
+  padding-left: 20px;
+  padding-top: 15%;
+  padding-right: 20px;
 `;
 
 export const CenterLabel = styled.Text`
@@ -12,9 +13,6 @@ export const CenterLabel = styled.Text`
 `;
 
 export const WrapperTitle = styled.View`
-  margin-top: 73px;
-  /* padding-left: 42px;
-  padding-right: 42px; */
   margin-bottom: 23px;
 `;
 
@@ -41,4 +39,6 @@ export const Welcome = styled.Text`
 export const WrapperCardBalance = styled.View`
   align-items: center;
   justify-content: flex-start;
+  padding-right: 10px;
+  padding-left: 10px;
 `;
