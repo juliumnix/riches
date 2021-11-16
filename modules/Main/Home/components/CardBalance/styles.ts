@@ -6,7 +6,7 @@ export const Wrapper = styled.TouchableOpacity``;
 export const Container = styled(LinearGradient).attrs({
   colors: ['#1A9949', '#B6E2C6'],
 })`
-  width: 340px;
+  min-width: 110%;
   height: 182px;
   border-radius: 20px;
   padding-top: 23px;
@@ -21,7 +21,7 @@ export const Title = styled.Text`
 `;
 
 export const AllMoney = styled.Text`
-  font-size: 36px;
+  font-size: 34px;
   color: #fafafa;
   margin-bottom: 10px;
 `;
