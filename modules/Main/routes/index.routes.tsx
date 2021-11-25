@@ -10,6 +10,7 @@ export type RootStackParamList = {
   CryptoPage: undefined;
   GoalsPage: undefined;
   CreateGoal: undefined;
+  EditGoal: undefined;
   Home: undefined;
 };
 
