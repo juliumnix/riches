@@ -169,3 +169,11 @@ export const WrapperPortionDiscount = styled.Text`
 export const WrapperPortionValue = styled.Text`
   font-size: 16px;
 `;
+
+export const WrapperBalls = styled.View`
+  width: 100%;
+  flex-direction: row;
+  flex-wrap: wrap;
+  padding-top: 35px;
+  padding-bottom: 50px;
+`;

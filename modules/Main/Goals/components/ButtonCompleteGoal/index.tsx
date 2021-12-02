@@ -1,13 +1,29 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { View } from 'react-native';
 
 import * as S from './styles';
 
-const ButtonCompleteGoal = () => {
+type ButtonCompleteGoalProps = {
+  check: boolean;
+  value: number;
+  onPress: (item) => void;
+};
+const ButtonCompleteGoal = ({
+  check,
+  onPress,
+  value,
+}: ButtonCompleteGoalProps) => {
+  const [checked, setChecked] = useState(false);
+
+  function switchCheckedState() {
+    setChecked(!checked);
+  }
   return (
-    <S.Container isChecked={true}>
-      <S.Value>1</S.Value>
-    </S.Container>
+    <View style={{ paddingBottom: 10 }}>
+      <S.Container onPress={onPress} isChecked={check}>
+        <S.Value isChecked={check}>{value}</S.Value>
+      </S.Container>
+    </View>
   );
 };
 

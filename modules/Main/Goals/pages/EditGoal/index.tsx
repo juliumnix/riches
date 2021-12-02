@@ -6,7 +6,10 @@ import { useGoal } from '../../../hooks/goal';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { RootStackParamList } from '../../../routes/index.routes';
 import { StatusBar } from 'expo-status-bar';
+import { SharedElement } from 'react-navigation-shared-element';
+import ButtonCompleteGoal from '../../components/ButtonCompleteGoal';
 import * as S from './styles';
+import api from '../../../utils/api';
 
 function PlusSVG() {
   const svg = `
@@ -32,8 +35,10 @@ function MiniPlusSVG() {
 }
 type homeScreenProp = StackNavigationProp<RootStackParamList, 'EditGoal'>;
 
-import { SharedElement } from 'react-navigation-shared-element';
-import ButtonCompleteGoal from '../../components/ButtonCompleteGoal';
+type BallsProps = {
+  id: number;
+  isChecked: boolean;
+};
 
 const EditGoal = () => {
   const { getGoalName, getGoalFinalValue, getImage, getPortion } = useGoal();
@@ -43,6 +48,50 @@ const EditGoal = () => {
   const [image, setImage] = useState('');
   const [visibleModal, setVisibleModal] = useState(false);
   const [goalValue, setGoalValue] = useState(0);
+  const [array, setArray] = useState<BallsProps[]>([]);
+  const [saveValue, setSaveValue] = useState(0);
+  const [totalResult, setTotalResult] = useState(
+    getGoalFinalValue() - saveValue,
+  );
+  const [portionValue, setPortionValue] = useState<number>(
+    Number((getGoalFinalValue() / getPortion()).toFixed(2)),
+  );
+
+  useEffect(() => {
+    teste();
+  }, []);
+
+  let testeTop = getPortion();
+  function teste() {
+    while (testeTop > 0) {
+      const ocjeto = {
+        id: testeTop,
+        isChecked: false,
+      };
+      testeTop--;
+      setArray(oldArray => [...oldArray, ocjeto]);
+    }
+  }
+
+  function setChecked(item: BallsProps) {
+    setArray(oldArray => {
+      return oldArray.map(item2 => {
+        if (item2.id === item.id) {
+          item2.isChecked = !item2.isChecked;
+          if (item2.isChecked) {
+            setSaveValue(saveValue + portionValue);
+            setTotalResult(totalResult - portionValue);
+          } else {
+            setSaveValue(saveValue - portionValue);
+            setTotalResult(totalResult + portionValue);
+          }
+        }
+
+        return item2;
+      });
+    });
+  }
+
   return (
     <S.Container>
       <StatusBar backgroundColor="#fafafa" />
@@ -67,25 +116,37 @@ const EditGoal = () => {
         <S.WrapperGoalInfo>
           <S.WrapperInfoBlock>
             <S.InfoTitle>Meta</S.InfoTitle>
-            <S.InfoValue isSafe={false}>R$: 1000,00</S.InfoValue>
+            <S.InfoValue isSafe={false}>R$: {getGoalFinalValue()}</S.InfoValue>
           </S.WrapperInfoBlock>
           <S.WrapperInfoBlock>
             <S.InfoTitle>Salvo</S.InfoTitle>
-            <S.InfoValue isSafe={true}>R$: 500,00</S.InfoValue>
+            <S.InfoValue isSafe={true}>R$: {saveValue}</S.InfoValue>
           </S.WrapperInfoBlock>
         </S.WrapperGoalInfo>
       </S.WrapperDistance>
       <S.WrapperPortionInfo>
         <S.WrapperPortionInfoTitle>Parcelas</S.WrapperPortionInfoTitle>
         <S.WrapperPortionDiscount>
-          Falta um total de: <S.InfoValue isSafe={true}>R$: 500,00</S.InfoValue>
+          Falta um total de:{' '}
+          <S.InfoValue isSafe={true}>R$: {totalResult}</S.InfoValue>
         </S.WrapperPortionDiscount>
         <S.WrapperPortionValue>
           Valor de cada parcela:
-          <S.InfoValue isSafe={true}> R$: 250,00</S.InfoValue>
+          <S.InfoValue isSafe={true}> R$: {portionValue}</S.InfoValue>
         </S.WrapperPortionValue>
       </S.WrapperPortionInfo>
-      <ButtonCompleteGoal />
+      <S.WrapperBalls>
+        {array.map(item => (
+          <>
+            <ButtonCompleteGoal
+              onPress={() => setChecked(item)}
+              check={item.isChecked}
+              value={item.id}
+            />
+            <View style={{ width: 10 }} />
+          </>
+        ))}
+      </S.WrapperBalls>
     </S.Container>
   );
 };

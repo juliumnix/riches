@@ -6,6 +6,7 @@ import { SvgXml } from 'react-native-svg';
 import { TouchableOpacity } from 'react-native';
 import { getHours } from 'date-fns';
 import { useGoal } from '../../../hooks/goal';
+import api from '../../../utils/api';
 
 export default function HomeScreen() {
   const [balanceVisibility, setBalanceVisibility] = useState(false);
