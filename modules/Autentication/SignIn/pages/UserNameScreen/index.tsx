@@ -42,7 +42,7 @@ export default function UserNameScreen() {
     if (!verifyNameEmpty()) {
       try {
         await getData();
-        await api.put('http://192.168.1.124:3000/usuarios/' + id, {
+        await api.put('http://192.168.0.110:3000/usuarios/' + id, {
           nome: name,
         });
         navigation.navigate('HomeApp');
@@ -54,7 +54,6 @@ export default function UserNameScreen() {
     try {
       const value = await AsyncStorage.getItem('@riches:id_usuario');
       if (value !== null) {
-        console.log(value);
         id = value;
       }
     } catch (e) {

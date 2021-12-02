@@ -40,7 +40,7 @@ export default function ModalSignIn({ visible, closeModal, ...rest }: Props) {
     setEmailIncorrect(false);
     setPasswordIncorrect(false);
     try {
-      const response = await api.post('http://192.168.1.124:3000/usuarios', {
+      const response = await api.post('http://192.168.0.110:3000/usuarios', {
         email: email,
         senha: password,
       });

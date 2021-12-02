@@ -41,7 +41,7 @@ export default function ModalLogin({
     setEmailIncorrect(false);
     setPasswordIncorrect(false);
     try {
-      const response = await api.post('http://192.168.1.109:3000/login', {
+      const response = await api.post('http://192.168.0.110:3000/login', {
         email: email,
         senha: password,
       });
