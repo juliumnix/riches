@@ -1,14 +1,11 @@
 import styled from 'styled-components/native';
-import { LinearGradient } from 'expo-linear-gradient';
 
-export const Wrapper = styled.TouchableOpacity``;
-
-export const Container = styled(LinearGradient).attrs({
-  colors: ['#1A9949', '#B6E2C6'],
-})`
+export const Wrapper = styled.TouchableOpacity`
   min-width: 110%;
   height: 182px;
-  border-radius: 20px;
+`;
+
+export const Container = styled.View`
   padding-top: 23px;
   padding-left: 23px;
   padding-right: 23px;

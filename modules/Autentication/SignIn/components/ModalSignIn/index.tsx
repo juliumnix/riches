@@ -40,7 +40,7 @@ export default function ModalSignIn({ visible, closeModal, ...rest }: Props) {
     setEmailIncorrect(false);
     setPasswordIncorrect(false);
     try {
-      const response = await api.post('http://192.168.0.110:3000/usuarios', {
+      const response = await api.post('http://192.168.1.102:3000/usuarios', {
         email: email,
         senha: password,
       });
@@ -80,6 +80,8 @@ export default function ModalSignIn({ visible, closeModal, ...rest }: Props) {
     Platform.OS === 'android' ? (
       <StatusBar backgroundColor="rgba(0,0,0,0)" animated={true} />
     ) : null;
+    setEmailIncorrect(false);
+    setPasswordIncorrect(false);
     setEmail('');
     setPassword('');
   }

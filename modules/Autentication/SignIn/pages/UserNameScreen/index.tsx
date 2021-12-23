@@ -42,7 +42,7 @@ export default function UserNameScreen() {
     if (!verifyNameEmpty()) {
       try {
         await getData();
-        await api.put('http://192.168.0.110:3000/usuarios/' + id, {
+        await api.put('http://192.168.1.102:3000/usuarios/' + id, {
           nome: name,
         });
         navigation.navigate('HomeApp');
