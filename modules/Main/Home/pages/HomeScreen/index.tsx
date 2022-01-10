@@ -3,12 +3,19 @@ import React, { useEffect, useState } from 'react';
 import * as S from './styles';
 import CardBalance from '../../components/CardBalance';
 import { SvgXml } from 'react-native-svg';
-import { TouchableOpacity } from 'react-native';
+import { Text, TouchableOpacity, View } from 'react-native';
 import { getHours } from 'date-fns';
 import { useGoal } from '../../../hooks/goal';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import ModalInput from '../../components/ModalInput';
 import ModalOutput from '../../components/ModalOutput';
+import api from '../../../utils/api';
+
+const teste = [
+  { id: 1, valor: '10' },
+  { id: 2, valor: '20' },
+  { id: 3, valor: '30' },
+];
 
 function CloseViewSVG() {
   const svg = `
@@ -63,9 +70,10 @@ function WithoutGoalsSVG() {
 export default function HomeScreen() {
   const [balanceVisibility, setBalanceVisibility] = useState(false);
   const [hours, setHours] = useState(0);
-  const { goalValue } = useGoal();
+  const { goalValue, handleGoalValue } = useGoal();
   const [modalInputVisibility, setModalInputVisibility] = useState(false);
   const [modalOutputVisibility, setModalOutputVisibility] = useState(false);
+  const [name, setName] = useState('');
 
   function handleSetBalanceVisibility() {
     setBalanceVisibility(!balanceVisibility);
@@ -79,10 +87,41 @@ export default function HomeScreen() {
     setModalOutputVisibility(!modalOutputVisibility);
   }
 
+  function addGoalValue(value: string) {
+    const numeredValue = Number(value);
+    if (numeredValue > 0) {
+      const oldGoal = goalValue;
+      const newGoal = oldGoal + numeredValue;
+      handleGoalValue(newGoal);
+    }
+  }
+
+  function removeGoalValue(value: string) {
+    const numeredValue = Number(value);
+    if (numeredValue > 0) {
+      const oldGoal = goalValue;
+      const newGoal = oldGoal - numeredValue;
+      handleGoalValue(newGoal);
+    }
+  }
+
   useEffect(() => {
     const result = getHours(new Date().getTime()) - 3;
     setHours(result);
+    getInfoFromDatabase();
   }, []);
+
+  async function getInfoFromDatabase() {
+    try {
+      const value = await AsyncStorage.getItem('@riches:id_usuario');
+      const result = await api.get(
+        `http://192.168.0.110:3000/usuarios/${value}`,
+      );
+      setName(result.data.nome);
+    } catch (error) {
+      console.log(error);
+    }
+  }
 
   function getDescriptionHours() {
     if (hours >= 6 && hours < 12) {
@@ -94,23 +133,13 @@ export default function HomeScreen() {
     return <S.Welcome>Boa noite</S.Welcome>;
   }
 
-  const deleteData = async () => {
-    try {
-      await AsyncStorage.removeItem('@riches:id_usuario');
-    } catch (e) {
-      // error reading value
-    }
-  };
-
   return (
     <S.Container>
       <S.WrapperTitle>
         <S.WrapperFirstLine>
           <S.WrapperHelloName>
-            <TouchableOpacity onPress={() => deleteData()}>
-              <HelloSVG />
-            </TouchableOpacity>
-            <S.Name>Usuário</S.Name>
+            <HelloSVG />
+            <S.Name>{name}</S.Name>
           </S.WrapperHelloName>
           <TouchableOpacity onPress={handleSetBalanceVisibility}>
             {balanceVisibility == true ? <CloseViewSVG /> : <ViewSVG />}
@@ -137,23 +166,38 @@ export default function HomeScreen() {
       <S.GoalsHeader>
         <S.GoalsHeaderFirstLine>
           <S.GoalTitle>Metas</S.GoalTitle>
-          <S.GoalsSeeAll>Veja todos</S.GoalsSeeAll>
+          <TouchableOpacity>
+            <S.GoalsSeeAll>Veja todos</S.GoalsSeeAll>
+          </TouchableOpacity>
         </S.GoalsHeaderFirstLine>
         <S.GoalsSubtitle>Principais metas</S.GoalsSubtitle>
       </S.GoalsHeader>
       <S.Goals>
-        <S.WrapperWithoutGoals>
-          <WithoutGoalsSVG />
-          <S.WithoutGoalsText>
-            Você não possui metas registradas
-          </S.WithoutGoalsText>
-        </S.WrapperWithoutGoals>
+        {teste == [] ? (
+          <S.WrapperWithoutGoals>
+            <WithoutGoalsSVG />
+            <S.WithoutGoalsText>
+              Você não possui metas registradas
+            </S.WithoutGoalsText>
+          </S.WrapperWithoutGoals>
+        ) : (
+          <S.ListGoals
+            data={teste}
+            renderItem={({ item }) => (
+              <View style={{ backgroundColor: 'red' }}>
+                <Text style={{ height: 100, padding: 20 }}>{item.valor}</Text>
+              </View>
+            )}
+          />
+        )}
       </S.Goals>
       <ModalInput
+        sendData={addGoalValue}
         visible={modalInputVisibility}
         closeModal={() => handleSetModalInputVisibility()}
       />
       <ModalOutput
+        sendData={removeGoalValue}
         visible={modalOutputVisibility}
         closeModal={() => handleSetModalOutputVisibility()}
       />

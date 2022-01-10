@@ -1,8 +1,14 @@
 import { StatusBar } from 'expo-status-bar';
-import React from 'react';
+import React, { useState } from 'react';
 import * as S from './styles';
 import { SvgXml } from 'react-native-svg';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { TouchableOpacity } from 'react-native-gesture-handler';
+import { useNavigation } from '@react-navigation/native';
+import { StackNavigationProp } from '@react-navigation/stack';
+import { ConfigStackParamList } from '../../routes/index.routes';
+import ModalCommon from '../../../components/Modal';
+import { useGoal } from '../../../hooks/goal';
 
 function MoneySVG() {
   const svg = `
@@ -38,26 +44,68 @@ function ExitSVG() {
   return <Svg />;
 }
 
+type ModalSignInProps = StackNavigationProp<
+  ConfigStackParamList,
+  'OpeningBalanceScreen'
+>;
+
 export default function ConfigScreen() {
+  const { handleGoalValue } = useGoal();
+  const [balanceVisible, setBalanceVisible] = useState(false);
+  const [nameVisible, setNameVisible] = useState(false);
+  const [name, setName] = useState('');
+  const navigation = useNavigation<ModalSignInProps>();
+
+  const deleteData = async () => {
+    try {
+      // await AsyncStorage.removeItem('@riches:id_usuario');
+      navigation.navigate('LoginScreen');
+    } catch (e) {
+      // error reading value
+    }
+  };
   return (
     <S.Container>
       <S.Header>
         <S.Title>Ajustes</S.Title>
-        <TouchableOpacity>
+        <TouchableOpacity onPress={deleteData}>
           <ExitSVG />
         </TouchableOpacity>
       </S.Header>
       <S.Buttons>
-        <S.Button>
+        <S.Button onPress={() => setBalanceVisible(true)}>
           <MoneySVG />
           <S.ButtonTitle>Ajustar o saldo</S.ButtonTitle>
         </S.Button>
-        <S.Button>
+        <S.Button onPress={() => setNameVisible(true)}>
           <FaceSVG />
           <S.ButtonTitle>Ajustar nome</S.ButtonTitle>
         </S.Button>
       </S.Buttons>
       <StatusBar style="auto" />
+      <ModalCommon
+        sendData={() => {
+          setBalanceVisible(false);
+        }}
+        placeholder="R$: 0,00"
+        title="Qual seu saldo inicial?"
+        visible={balanceVisible}
+        closeModal={() => {
+          setBalanceVisible(false);
+        }}
+        switchValue={(text: string) => handleGoalValue(Number(text))}
+      />
+
+      <ModalCommon
+        sendData={() => setNameVisible(false)}
+        placeholder="Ex: Pedro"
+        title="Qual seu nome?"
+        visible={nameVisible}
+        closeModal={() => {
+          setNameVisible(false);
+        }}
+        switchValue={(text: string) => setName(text)}
+      />
     </S.Container>
   );
 }

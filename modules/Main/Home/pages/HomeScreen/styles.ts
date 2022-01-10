@@ -112,3 +112,7 @@ export const WithoutGoalsText = styled.Text`
   color: #b0b0b0;
   margin-top: 2%;
 `;
+
+export const ListGoals = styled.FlatList`
+  flex: 1;
+`;

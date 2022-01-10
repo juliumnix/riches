@@ -6,6 +6,7 @@ import * as S from './styles';
 type Props = ModalProps & {
   visible: boolean;
   closeModal: () => void;
+  sendData: (text: string) => void;
 };
 
 function ArrowSVG() {
@@ -19,13 +20,23 @@ function ArrowSVG() {
   return <Svg />;
 }
 
-export default function ModalInput({ visible, closeModal, ...rest }: Props) {
-  const [inputValue, setInputValue] = useState(0);
+export default function ModalInput({
+  sendData,
+  visible,
+  closeModal,
+  ...rest
+}: Props) {
+  const [inputValue, setInputValue] = useState('');
   function close() {
     closeModal();
     Platform.OS === 'android' ? (
       <StatusBar backgroundColor="rgba(0,0,0,0)" animated={true} />
     ) : null;
+  }
+
+  function closeAndSendData() {
+    sendData(inputValue);
+    close();
   }
 
   return (
@@ -54,7 +65,7 @@ export default function ModalInput({ visible, closeModal, ...rest }: Props) {
           <S.ContainerMoney>
             <S.Money
               onChangeText={text => {
-                setInputValue(Number(text));
+                setInputValue(text);
               }}
               placeholder="R$: 0,00"
             />
@@ -62,7 +73,7 @@ export default function ModalInput({ visible, closeModal, ...rest }: Props) {
           </S.ContainerMoney>
           <S.Subtitle>Digite uma quantia maior que R$ 0,00</S.Subtitle>
           <S.WrapperNextButton>
-            <S.Next onPress={() => close()}>
+            <S.Next onPress={() => closeAndSendData()}>
               <ArrowSVG />
             </S.Next>
           </S.WrapperNextButton>

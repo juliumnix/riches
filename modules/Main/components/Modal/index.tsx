@@ -1,12 +1,16 @@
-import React, { useState } from 'react';
-import { Modal, ModalProps, Platform, StatusBar, View } from 'react-native';
+import { StatusBar } from 'expo-status-bar';
+import React from 'react';
+import { View, Modal, Platform } from 'react-native';
 import { SvgXml } from 'react-native-svg';
 import * as S from './styles';
 
-type Props = ModalProps & {
+type ModalCommonProps = {
   visible: boolean;
+  title: string;
   closeModal: () => void;
-  sendData: (text: string) => void;
+  switchValue: (value: string) => void;
+  placeholder: string;
+  sendData: () => void;
 };
 
 function ArrowSVG() {
@@ -20,32 +24,22 @@ function ArrowSVG() {
   return <Svg />;
 }
 
-export default function ModalOutput({
-  sendData,
-  visible,
+const ModalCommon = ({
   closeModal,
+  title,
+  visible,
+  placeholder,
+  sendData,
+  switchValue,
   ...rest
-}: Props) {
-  const [outputValue, setOutputValue] = useState('');
-  function close() {
-    closeModal();
-    Platform.OS === 'android' ? (
-      <StatusBar backgroundColor="rgba(0,0,0,0)" animated={true} />
-    ) : null;
-  }
-
-  function closeAndSendData() {
-    sendData(outputValue);
-    close();
-  }
-
+}: ModalCommonProps) => {
   return (
     <Modal
       transparent
       animationType="slide"
       visible={visible}
       onRequestClose={function () {
-        close();
+        closeModal();
       }}
       {...rest}
     >
@@ -55,30 +49,31 @@ export default function ModalOutput({
       <S.ModalContainer>
         <S.CloseModal
           onPress={function () {
-            close();
+            closeModal();
           }}
         />
         <S.Container>
           <S.WrapperTitle>
-            <S.Title>Qual valor da saída</S.Title>
+            <S.Title>{title}</S.Title>
           </S.WrapperTitle>
           <S.ContainerMoney>
             <S.Money
               onChangeText={text => {
-                setOutputValue(text);
+                switchValue(text);
               }}
-              placeholder="R$: 0,00"
+              placeholder={placeholder}
             />
             <S.Line></S.Line>
           </S.ContainerMoney>
-          <S.Subtitle>Digite uma quantia maior que R$ 0,00</S.Subtitle>
-          <S.WrapperNextButton>
-            <S.Next onPress={() => closeAndSendData()}>
+          <S.Footer>
+            <S.NextButton onPress={() => sendData()}>
               <ArrowSVG />
-            </S.Next>
-          </S.WrapperNextButton>
+            </S.NextButton>
+          </S.Footer>
         </S.Container>
       </S.ModalContainer>
     </Modal>
   );
-}
+};
+
+export default ModalCommon;
