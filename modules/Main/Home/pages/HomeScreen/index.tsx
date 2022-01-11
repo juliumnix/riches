@@ -6,9 +6,11 @@ import { SvgXml } from 'react-native-svg';
 import { Text, TouchableOpacity, View } from 'react-native';
 import { getHours } from 'date-fns';
 import { useGoal } from '../../../hooks/goal';
+
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import ModalInput from '../../components/ModalInput';
 import ModalOutput from '../../components/ModalOutput';
+
 import api from '../../../utils/api';
 
 const teste = [

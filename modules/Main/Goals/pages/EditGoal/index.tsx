@@ -1,13 +1,15 @@
 import { useNavigation } from '@react-navigation/core';
 import React, { useEffect, useState } from 'react';
-import { FlatList, Text, TouchableOpacity, View, Animated } from 'react-native';
+import { Animated, FlatList, Text, TouchableOpacity, View } from 'react-native';
 import { SvgXml } from 'react-native-svg';
 import { useGoal } from '../../../hooks/goal';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { RootStackParamList } from '../../../routes/index.routes';
-
-import * as S from './styles';
 import { StatusBar } from 'expo-status-bar';
+import { SharedElement } from 'react-navigation-shared-element';
+import ButtonCompleteGoal from '../../components/ButtonCompleteGoal';
+import * as S from './styles';
+import api from '../../../utils/api';
 
 function PlusSVG() {
   const svg = `
@@ -31,40 +33,63 @@ function MiniPlusSVG() {
   const Svg = () => <SvgXml xml={svg} width="22" height="22" />;
   return <Svg />;
 }
+type homeScreenProp = StackNavigationProp<RootStackParamList, 'EditGoal'>;
 
-type homeScreenProp = StackNavigationProp<RootStackParamList, 'GoalsPage'>;
-
-import { SharedElement } from 'react-navigation-shared-element';
-
-type GoalProps = {
-  image: string;
-  name: string;
-  portion: number;
-  value: number;
+type BallsProps = {
+  id: number;
+  isChecked: boolean;
 };
 
-const GoalsPage = () => {
-  const {
-    goal,
-    getGoal,
-    setGoalName,
-    setImage,
-    setPortion,
-    setGoalFinalValue,
-  } = useGoal();
+const EditGoal = () => {
+  const { getGoalName, getGoalFinalValue, getImage, getPortion } = useGoal();
   const navigation = useNavigation<homeScreenProp>();
-  const [goals, setGoals] = useState(goal);
+  const [goalName, setGoalName] = useState('');
+  const [portion, setPortion] = useState(0);
+  const [image, setImage] = useState('');
+  const [visibleModal, setVisibleModal] = useState(false);
+  const [goalValue, setGoalValue] = useState(0);
+  const [array, setArray] = useState<BallsProps[]>([]);
+  const [saveValue, setSaveValue] = useState(0);
+  const [totalResult, setTotalResult] = useState(
+    getGoalFinalValue() - saveValue,
+  );
+  const [portionValue, setPortionValue] = useState<number>(
+    Number((getGoalFinalValue() / getPortion()).toFixed(2)),
+  );
 
   useEffect(() => {
-    setGoals(getGoal());
-  }, [goal]);
+    teste();
+  }, []);
 
-  function handleItemNavigation(item: GoalProps) {
-    setGoalName(item.name);
-    setImage(item.image);
-    setPortion(item.portion);
-    setGoalFinalValue(item.value);
-    navigation.navigate('EditGoal');
+  let testeTop = getPortion();
+  function teste() {
+    while (testeTop > 0) {
+      const ocjeto = {
+        id: testeTop,
+        isChecked: false,
+      };
+      testeTop--;
+      setArray(oldArray => [...oldArray, ocjeto]);
+    }
+  }
+
+  function setChecked(item: BallsProps) {
+    setArray(oldArray => {
+      return oldArray.map(item2 => {
+        if (item2.id === item.id) {
+          item2.isChecked = !item2.isChecked;
+          if (item2.isChecked) {
+            setSaveValue(saveValue + portionValue);
+            setTotalResult(totalResult - portionValue);
+          } else {
+            setSaveValue(saveValue - portionValue);
+            setTotalResult(totalResult + portionValue);
+          }
+        }
+
+        return item2;
+      });
+    });
   }
 
   return (
@@ -72,55 +97,58 @@ const GoalsPage = () => {
       <StatusBar backgroundColor="#fafafa" />
       <S.Header>
         <S.WrapperTitle>
-          <S.Title>Metas</S.Title>
+          <S.TitlePage>{getGoalName()}</S.TitlePage>
+          <View style={{ paddingLeft: 10 }}></View>
         </S.WrapperTitle>
 
-        <TouchableOpacity onPress={() => navigation.navigate('CreateGoal')}>
-          <PlusSVG />
-        </TouchableOpacity>
+        <TouchableOpacity
+          onPress={() => navigation.goBack()}
+        ></TouchableOpacity>
       </S.Header>
-      <View style={{ flex: 1, marginBottom: 10 }}>
-        {goal.length > 0 ? (
-          <FlatList
-            keyExtractor={photo => photo.name}
-            data={goals}
-            numColumns={2}
-            ItemSeparatorComponent={() => <S.Separator />}
-            columnWrapperStyle={{ justifyContent: 'space-between' }}
-            style={{ width: '100%' }}
-            showsVerticalScrollIndicator={false}
-            renderItem={({ item }) => (
-              <TouchableOpacity onPress={() => handleItemNavigation(item)}>
-                <Animated.View style={{ borderRadius: 20 }}>
-                  <SharedElement id={item.image} style={{ borderRadius: 20 }}>
-                    <S.ImageItem
-                      source={{ uri: item.image }}
-                      imageStyle={{ borderRadius: 20, opacity: 0.6 }}
-                      resizeMode="cover"
-                    >
-                      <S.ImageDetails>
-                        <S.ImageTitle> {item.name}</S.ImageTitle>
-                      </S.ImageDetails>
-                    </S.ImageItem>
-                  </SharedElement>
-                </Animated.View>
-              </TouchableOpacity>
-            )}
-          />
-        ) : (
-          <S.EmptyListWrapper>
-            <S.EmptyListTitle>
-              Você não possui metas registradas
-            </S.EmptyListTitle>
-            <S.EmptyListSubtitleWrapper>
-              <S.EmptyListSubtitle>Adicione metas no botão</S.EmptyListSubtitle>
-              <MiniPlusSVG />
-            </S.EmptyListSubtitleWrapper>
-          </S.EmptyListWrapper>
-        )}
-      </View>
+
+      <S.WrapperDistance>
+        <SharedElement id={getImage()}>
+          <S.ImageGoal source={{ uri: getImage() }} resizeMode="cover" />
+        </SharedElement>
+      </S.WrapperDistance>
+
+      <S.WrapperDistance>
+        <S.WrapperGoalInfo>
+          <S.WrapperInfoBlock>
+            <S.InfoTitle>Meta</S.InfoTitle>
+            <S.InfoValue isSafe={false}>R$: {getGoalFinalValue()}</S.InfoValue>
+          </S.WrapperInfoBlock>
+          <S.WrapperInfoBlock>
+            <S.InfoTitle>Salvo</S.InfoTitle>
+            <S.InfoValue isSafe={true}>R$: {saveValue}</S.InfoValue>
+          </S.WrapperInfoBlock>
+        </S.WrapperGoalInfo>
+      </S.WrapperDistance>
+      <S.WrapperPortionInfo>
+        <S.WrapperPortionInfoTitle>Parcelas</S.WrapperPortionInfoTitle>
+        <S.WrapperPortionDiscount>
+          Falta um total de:{' '}
+          <S.InfoValue isSafe={true}>R$: {totalResult}</S.InfoValue>
+        </S.WrapperPortionDiscount>
+        <S.WrapperPortionValue>
+          Valor de cada parcela:
+          <S.InfoValue isSafe={true}> R$: {portionValue}</S.InfoValue>
+        </S.WrapperPortionValue>
+      </S.WrapperPortionInfo>
+      <S.WrapperBalls>
+        {array.map(item => (
+          <>
+            <ButtonCompleteGoal
+              onPress={() => setChecked(item)}
+              check={item.isChecked}
+              value={item.id}
+            />
+            <View style={{ width: 10 }} />
+          </>
+        ))}
+      </S.WrapperBalls>
     </S.Container>
   );
 };
 
-export default GoalsPage;
+export default EditGoal;
