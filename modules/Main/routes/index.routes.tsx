@@ -1,6 +1,7 @@
 import React from 'react';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { HomeRoutes } from '../Home/routes/index.routes';
+import { ConfigRoutes } from '../Configuration/routes/index.routes';
 import { CryptoStack } from '../Crypto/routes/index.routes';
 import { GoalStack } from '../Goals/routes/index.routes';
 import { getFocusedRouteNameFromRoute } from '@react-navigation/native';
@@ -12,6 +13,7 @@ export type RootStackParamList = {
   CreateGoal: undefined;
   EditGoal: undefined;
   Home: undefined;
+  Config: undefined;
 };
 
 const Tab = createBottomTabNavigator();
@@ -66,6 +68,17 @@ export function MainRoutes() {
         })}
         name="Goal"
         component={GoalStack}
+      />
+
+      <Tab.Screen
+        options={({ route }) => ({
+          tabBarStyle: getTabBarStyle(route),
+          tabBarIcon: ({ color }) => (
+            <Feather name="settings" size={24} color={color} />
+          ),
+        })}
+        name="Config"
+        component={ConfigRoutes}
       />
     </Tab.Navigator>
   );

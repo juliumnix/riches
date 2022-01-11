@@ -3,7 +3,6 @@ import React from 'react';
 import * as S from './styles';
 import { SvgXml } from 'react-native-svg';
 import { useGoal } from '../../../../Main/hooks/goal';
-import { View } from 'react-native';
 
 export default function OpeningBalanceScreen() {
   //remover essa desgraça aqui
