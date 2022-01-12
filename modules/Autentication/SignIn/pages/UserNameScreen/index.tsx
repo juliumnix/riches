@@ -7,6 +7,7 @@ import { AutenticationParamList } from '../../../routes/index.routes';
 import { StackNavigationProp } from '@react-navigation/stack';
 import api from '../../../../Main/utils/api';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { ip } from '../../../../../ip';
 
 type UserNameScreenProps = StackNavigationProp<
   AutenticationParamList,
@@ -42,10 +43,10 @@ export default function UserNameScreen() {
     if (!verifyNameEmpty()) {
       try {
         await getData();
-        await api.put('http://192.168.0.110:3000/usuarios/' + id, {
+        await api.put(`http://${ip}:3000/usuarios/` + id, {
           nome: name,
         });
-        navigation.navigate('HomeApp');
+        navigation.navigate('OpeningBalanceScreen');
       } catch (error) {}
     }
   }

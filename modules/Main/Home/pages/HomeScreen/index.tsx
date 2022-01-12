@@ -1,5 +1,5 @@
 import { StatusBar } from 'expo-status-bar';
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import * as S from './styles';
 import CardBalance from '../../components/CardBalance';
 import { SvgXml } from 'react-native-svg';
@@ -12,6 +12,8 @@ import ModalInput from '../../components/ModalInput';
 import ModalOutput from '../../components/ModalOutput';
 
 import api from '../../../utils/api';
+import { ip } from '../../../../../ip';
+import { useFocusEffect, useNavigation } from '@react-navigation/native';
 
 const teste = [
   { id: 1, valor: '10' },
@@ -76,6 +78,9 @@ export default function HomeScreen() {
   const [modalInputVisibility, setModalInputVisibility] = useState(false);
   const [modalOutputVisibility, setModalOutputVisibility] = useState(false);
   const [name, setName] = useState('');
+  const [balance, setBalance] = useState(0);
+
+  const navigation = useNavigation();
 
   function handleSetBalanceVisibility() {
     setBalanceVisibility(!balanceVisibility);
@@ -107,19 +112,22 @@ export default function HomeScreen() {
     }
   }
 
-  useEffect(() => {
-    const result = getHours(new Date().getTime()) - 3;
-    setHours(result);
-    getInfoFromDatabase();
-  }, []);
+  useFocusEffect(
+    useCallback(() => {
+      if (navigation.isFocused()) {
+        const result = getHours(new Date().getTime()) - 3;
+        setHours(result);
+        getInfoFromDatabase();
+      }
+    }, []),
+  );
 
   async function getInfoFromDatabase() {
     try {
       const value = await AsyncStorage.getItem('@riches:id_usuario');
-      const result = await api.get(
-        `http://192.168.0.110:3000/usuarios/${value}`,
-      );
+      const result = await api.get(`http://${ip}:3000/usuarios/${value}`);
       setName(result.data.nome);
+      setBalance(Number(result.data.saldo));
     } catch (error) {
       console.log(error);
     }
@@ -151,9 +159,9 @@ export default function HomeScreen() {
       </S.WrapperTitle>
       <S.WrapperCardBalance>
         <CardBalance
-          balance={goalValue}
-          currency={0}
-          percentage={45}
+          balance={balance}
+          currency={balance}
+          percentage={0}
           visibleLine={balanceVisibility}
         />
       </S.WrapperCardBalance>

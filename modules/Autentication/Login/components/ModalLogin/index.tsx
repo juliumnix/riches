@@ -5,6 +5,7 @@ import {
   TouchableWithoutFeedback,
 } from 'react-native-gesture-handler';
 import { SvgXml } from 'react-native-svg';
+import { ip } from '../../../../../ip';
 import api from '../../../../Main/utils/api';
 import * as S from './styles';
 
@@ -41,7 +42,7 @@ export default function ModalLogin({
     setEmailIncorrect(false);
     setPasswordIncorrect(false);
     try {
-      const response = await api.post('http://192.168.0.110:3000/login', {
+      const response = await api.post(`http://${ip}:3000/login`, {
         email: email,
         senha: password,
       });

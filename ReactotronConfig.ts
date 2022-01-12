@@ -1,9 +1,10 @@
 import Reactotron, { ReactotronReactNative } from 'reactotron-react-native';
+import { ip } from './ip';
 
 // eslint-disable-next-line no-undef
 if (__DEV__) {
   const tron: ReactotronReactNative = Reactotron.configure({
-    host: '192.168.0.110',
+    host: `${ip}`,
   })
     .useReactNative()
 
