@@ -114,7 +114,7 @@ const CryptoPage = () => {
       teste.push(ethereum);
       teste.push(cardano);
       teste.push(xrp);
-      teste.push(litecoin);
+      // teste.push(litecoin);
       teste.push(bnb);
 
       setData(teste);

@@ -14,8 +14,6 @@ import Svg, { Defs, Path, ClipPath, Use } from 'react-native-svg';
 
 import api from '../../../utils/api';
 
-import unsplash from '../../images/unsplash.png';
-
 import * as S from './styles';
 import { SvgXml } from 'react-native-svg';
 
