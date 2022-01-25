@@ -1,12 +1,16 @@
 import React, { useState } from 'react';
 import { Modal, ModalProps, Platform, StatusBar, View } from 'react-native';
 import { SvgXml } from 'react-native-svg';
+import { ip } from '../../../../../ip';
+import api from '../../../utils/api';
 import * as S from './styles';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 type Props = ModalProps & {
   visible: boolean;
   closeModal: () => void;
-  sendData: (text: string) => void;
+  sendData: () => void;
+  balance: number;
 };
 
 function ArrowSVG() {
@@ -24,6 +28,7 @@ export default function ModalOutput({
   sendData,
   visible,
   closeModal,
+  balance,
   ...rest
 }: Props) {
   const [outputValue, setOutputValue] = useState('');
@@ -34,9 +39,22 @@ export default function ModalOutput({
     ) : null;
   }
 
-  function closeAndSendData() {
-    sendData(outputValue);
-    close();
+  async function sendToAPI() {
+    try {
+      const value = await AsyncStorage.getItem('@riches:id_usuario');
+      await api.post(`http://${ip}:3000/saldo/saida`, {
+        id_usuario: value,
+        valor: outputValue,
+        saida: true,
+      });
+      try {
+        await api.put(`http://${ip}:3000/usuarios/saldo/` + value, {
+          saldo: balance - Number(outputValue),
+        });
+        sendData();
+        closeModal();
+      } catch (error) {}
+    } catch (error) {}
   }
 
   return (
@@ -73,7 +91,7 @@ export default function ModalOutput({
           </S.ContainerMoney>
           <S.Subtitle>Digite uma quantia maior que R$ 0,00</S.Subtitle>
           <S.WrapperNextButton>
-            <S.Next onPress={() => closeAndSendData()}>
+            <S.Next onPress={() => sendToAPI()}>
               <ArrowSVG />
             </S.Next>
           </S.WrapperNextButton>

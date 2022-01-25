@@ -3,7 +3,7 @@ import React, { useCallback, useEffect, useState } from 'react';
 import * as S from './styles';
 import CardBalance from '../../components/CardBalance';
 import { SvgXml } from 'react-native-svg';
-import { Text, TouchableOpacity, View } from 'react-native';
+import { FlatList, Text, TouchableOpacity, View } from 'react-native';
 import { getHours } from 'date-fns';
 import { useGoal } from '../../../hooks/goal';
 
@@ -14,6 +14,7 @@ import ModalOutput from '../../components/ModalOutput';
 import api from '../../../utils/api';
 import { ip } from '../../../../../ip';
 import { useFocusEffect, useNavigation } from '@react-navigation/native';
+import GoalIndicator from '../../components/GoalIndicator';
 
 const teste = [
   { id: 1, valor: '10' },
@@ -71,6 +72,15 @@ function WithoutGoalsSVG() {
   return <Svg />;
 }
 
+type GoalPropsPage = {
+  id_meta: number;
+  url_image: string;
+  nome: string;
+  numero_parcela: number;
+  valor: number;
+  realizado: string;
+};
+
 export default function HomeScreen() {
   const [balanceVisibility, setBalanceVisibility] = useState(false);
   const [hours, setHours] = useState(0);
@@ -80,7 +90,28 @@ export default function HomeScreen() {
   const [name, setName] = useState('');
   const [balance, setBalance] = useState(0);
 
+  const [goals, setGoals] = useState([] as GoalPropsPage[]);
+
   const navigation = useNavigation();
+
+  useFocusEffect(
+    useCallback(() => {
+      if (navigation.isFocused()) {
+        const result = getHours(new Date().getTime()) - 3;
+        setHours(result);
+        getInfoFromDatabase();
+        getGoalsFromAPI();
+      }
+    }, []),
+  );
+
+  async function getGoalsFromAPI() {
+    try {
+      const value = await AsyncStorage.getItem('@riches:id_usuario');
+      const response = await api.get(`http://${ip}:3000/meta/${value}`);
+      setGoals(response.data);
+    } catch (error) {}
+  }
 
   function handleSetBalanceVisibility() {
     setBalanceVisibility(!balanceVisibility);
@@ -100,6 +131,7 @@ export default function HomeScreen() {
       const oldGoal = goalValue;
       const newGoal = oldGoal + numeredValue;
       handleGoalValue(newGoal);
+      setBalance(goalValue);
     }
   }
 
@@ -109,18 +141,9 @@ export default function HomeScreen() {
       const oldGoal = goalValue;
       const newGoal = oldGoal - numeredValue;
       handleGoalValue(newGoal);
+      setBalance(goalValue);
     }
   }
-
-  useFocusEffect(
-    useCallback(() => {
-      if (navigation.isFocused()) {
-        const result = getHours(new Date().getTime()) - 3;
-        setHours(result);
-        getInfoFromDatabase();
-      }
-    }, []),
-  );
 
   async function getInfoFromDatabase() {
     try {
@@ -129,7 +152,7 @@ export default function HomeScreen() {
       setName(result.data.nome);
       setBalance(Number(result.data.saldo));
     } catch (error) {
-      console.log(error);
+      // console.log(error);
     }
   }
 
@@ -191,23 +214,32 @@ export default function HomeScreen() {
             </S.WithoutGoalsText>
           </S.WrapperWithoutGoals>
         ) : (
-          <S.ListGoals
-            data={teste}
+          <FlatList
+            showsVerticalScrollIndicator={false}
+            keyExtractor={item => String(item.id_meta)}
+            data={goals}
             renderItem={({ item }) => (
-              <View style={{ backgroundColor: 'red' }}>
-                <Text style={{ height: 100, padding: 20 }}>{item.valor}</Text>
+              <View style={{ paddingBottom: 10 }}>
+                <GoalIndicator
+                  url={item.url_image}
+                  titulo={item.nome}
+                  meta={item.valor}
+                  realizado={item.realizado}
+                />
               </View>
             )}
           />
         )}
       </S.Goals>
       <ModalInput
-        sendData={addGoalValue}
+        balance={balance}
+        sendData={getInfoFromDatabase}
         visible={modalInputVisibility}
         closeModal={() => handleSetModalInputVisibility()}
       />
       <ModalOutput
-        sendData={removeGoalValue}
+        balance={balance}
+        sendData={getInfoFromDatabase}
         visible={modalOutputVisibility}
         closeModal={() => handleSetModalOutputVisibility()}
       />

@@ -16,13 +16,16 @@ type GoalContextData = {
   setPortion: (portion: number) => void;
   setImage: (image: string) => void;
   setGoalFinalValue: (value: number) => void;
+  setIdGoal: (id: number) => void;
+  getIdGoal: () => number;
 };
 
 type GoalProps = {
-  image: string;
-  name: string;
-  portion: number;
-  value: number;
+  id_meta: number;
+  url_image: string;
+  nome: string;
+  numero_parcela: number;
+  valor: number;
 };
 
 const GoalContext = createContext<GoalContextData>({} as GoalContextData);
@@ -45,6 +48,7 @@ export const GoalProvider: React.FC = ({ children }) => {
   const [goalFinalValue, setGoalFinalValue] = useState(0);
   //REMOVER ESSA DESGRACA AQUI
   const [goalValue, setGoalValue] = useState<number>(0);
+  const [idGoal, setIdGoal] = useState<number>(0);
 
   function handleSetGoal(newGoal: GoalProps) {
     setGoal([...goal, newGoal]);
@@ -60,6 +64,10 @@ export const GoalProvider: React.FC = ({ children }) => {
 
   function getGoalName() {
     return goalName;
+  }
+
+  function getIdGoal() {
+    return idGoal;
   }
 
   function getPortion() {
@@ -90,6 +98,8 @@ export const GoalProvider: React.FC = ({ children }) => {
         setGoalName,
         setImage,
         setPortion,
+        setIdGoal,
+        getIdGoal,
       }}
     >
       {children}

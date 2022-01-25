@@ -12,6 +12,9 @@ import { SvgXml } from 'react-native-svg';
 import * as S from './styles';
 import { useGoal } from '../../../hooks/goal';
 import { useNavigation } from '@react-navigation/core';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import api from '../../../utils/api';
+import { ip } from '../../../../../ip';
 
 function PlusSVG() {
   const svg = `
@@ -95,15 +98,25 @@ const CreateGoal = () => {
     setGoalValue(atual);
   }
 
-  function handleConfirm() {
-    const goal = {
-      name: goalName,
-      portion: portion,
-      image: image,
-      value: goalValue,
-    };
-    handleSetGoal(goal);
-    navigation.goBack();
+  async function handleConfirm() {
+    try {
+      const value = await AsyncStorage.getItem('@riches:id_usuario');
+      await api.post(`http://${ip}:3000/meta`, {
+        id_usuario: value,
+        nome: goalName,
+        url_image: image,
+        numero_parcela: portion,
+        valor: goalValue,
+      });
+      const goal = {
+        name: goalName,
+        portion: portion,
+        image: image,
+        value: goalValue,
+      };
+      handleSetGoal(goal);
+      navigation.goBack();
+    } catch (error) {}
   }
 
   function reviewParams() {

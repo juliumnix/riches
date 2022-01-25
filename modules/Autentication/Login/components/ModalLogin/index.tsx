@@ -8,6 +8,8 @@ import { SvgXml } from 'react-native-svg';
 import { ip } from '../../../../../ip';
 import api from '../../../../Main/utils/api';
 import * as S from './styles';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useNavigation } from '@react-navigation/native';
 
 type Props = ModalProps & {
   visible: boolean;
@@ -32,6 +34,8 @@ export default function ModalLogin({
   openModalSignIn,
   ...rest
 }: Props) {
+  const navigation = useNavigation();
+
   const [id, setId] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -46,9 +50,10 @@ export default function ModalLogin({
         email: email,
         senha: password,
       });
-      console.log('entrou aqui');
+
+      await AsyncStorage.setItem('@riches:id_usuario', response.data);
       setId(response.data);
-      // navigateTo();
+      navigation.navigate('HomeApp');
       close();
     } catch (error) {
       setEmailIncorrect(true);
