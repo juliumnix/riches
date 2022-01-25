@@ -62,8 +62,8 @@ export default function ConfigScreen() {
 
   const deleteData = async () => {
     try {
-      // await AsyncStorage.removeItem('@riches:id_usuario');
-      navigation.navigate('LoginScreen');
+      await AsyncStorage.removeItem('@riches:id_usuario');
+      navigation.reset({ routes: [{ name: 'AutenticationExitStack' }] });
     } catch (e) {
       // error reading value
     }

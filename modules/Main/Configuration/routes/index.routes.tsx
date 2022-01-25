@@ -12,7 +12,7 @@ export type ConfigStackParamList = {
   OpeningBalanceScreen: undefined;
   UserNameScreen: undefined;
   ExistRoute: undefined;
-  LoginScreen: undefined;
+  // LoginScreen: undefined;
 };
 
 const Stack = createNativeStackNavigator<ConfigStackParamList>();
@@ -37,11 +37,11 @@ export function ConfigRoutes() {
         component={UserNameScreen}
       />
 
-      <Stack.Screen
+      {/* <Stack.Screen
         options={{ headerShown: false }}
         name="LoginScreen"
         component={LoginScreen}
-      />
+      /> */}
     </Stack.Navigator>
   );
 }

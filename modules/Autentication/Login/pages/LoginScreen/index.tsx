@@ -20,19 +20,19 @@ export default function LoginScreen() {
   const [modalLoginVisibility, setModalLoginVisibility] = useState(false);
   const [modalSignInVisibility, setModalSignInVisibility] = useState(false);
 
-  useEffect(() => {
-    const backAction = () => {
-      BackHandler.exitApp();
-      return true;
-    };
+  // useEffect(() => {
+  //   const backAction = () => {
+  //     BackHandler.exitApp();
+  //     return true;
+  //   };
 
-    const backHandler = BackHandler.addEventListener(
-      'hardwareBackPress',
-      backAction,
-    );
+  //   const backHandler = BackHandler.addEventListener(
+  //     'hardwareBackPress',
+  //     backAction,
+  //   );
 
-    return () => backHandler.remove();
-  }, []);
+  //   return () => backHandler.remove();
+  // }, []);
 
   function handleSetModalLoginVisibility() {
     setModalLoginVisibility(!modalLoginVisibility);

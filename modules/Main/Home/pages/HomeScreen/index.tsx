@@ -3,7 +3,13 @@ import React, { useCallback, useEffect, useState } from 'react';
 import * as S from './styles';
 import CardBalance from '../../components/CardBalance';
 import { SvgXml } from 'react-native-svg';
-import { FlatList, Text, TouchableOpacity, View } from 'react-native';
+import {
+  BackHandler,
+  FlatList,
+  Text,
+  TouchableOpacity,
+  View,
+} from 'react-native';
 import { getHours } from 'date-fns';
 import { useGoal } from '../../../hooks/goal';
 
@@ -104,6 +110,21 @@ export default function HomeScreen() {
       }
     }, []),
   );
+
+  // useEffect(() => {
+  //   const backAction = () => {
+  //     BackHandler.exitApp();
+  //     return true;
+  //   };
+  //   const backHandler = BackHandler.addEventListener(
+  //     'hardwareBackPress',
+  //     backAction,
+  //   );
+  //   return () => {
+  //     console.log('saiu da pagina');
+  //     backHandler.remove();
+  //   };
+  // }, []);
 
   async function getGoalsFromAPI() {
     try {

@@ -49,7 +49,7 @@ export default function OpeningBalanceScreen() {
       await api.put(`http://${ip}:3000/usuarios/saldo/` + id, {
         saldo: balance,
       });
-      navigation.navigate('HomeApp');
+      navigation.reset({ routes: [{ name: 'HomeApp' }] });
     } catch (error) {}
   }
 

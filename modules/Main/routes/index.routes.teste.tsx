@@ -1,23 +1,22 @@
 import React from 'react';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import OpeningBalanceScreen from '../SignIn/pages/OpeningBalanceScreen';
-import UserNameScreen from '../SignIn/pages/UserNameScreen';
-import LoginScreen from '../Login/pages/LoginScreen';
+// import OpeningBalanceScreen from '../SignIn/pages/OpeningBalanceScreen';
+// import UserNameScreen from '../SignIn/pages/UserNameScreen';
+// import LoginScreen from '../Login/pages/LoginScreen';
 import { MainRoutes } from '../../Main/routes/index.routes';
-import { AutenticationExitStack } from './index.routes.exit';
+import { AutenticationStack } from '../../Autentication/routes/index.routes';
+import { AutenticationExitStack } from '../../Autentication/routes/index.routes.exit';
 
-export type AutenticationParamList = {
-  OpeningBalanceScreen: undefined;
-  UserNameScreen: undefined;
-  LoginScreen: undefined;
+type AutenticationParamList = {
+  AutenticationStack: undefined;
   HomeApp: undefined;
 };
 
 const Stack = createNativeStackNavigator<AutenticationParamList>();
 
-export function AutenticationStack() {
+export function RouteTestStack() {
   return (
-    <Stack.Navigator>
+    <Stack.Navigator initialRouteName="HomeApp">
       <Stack.Screen
         options={{ headerShown: false }}
         name="AutenticationExitStack"

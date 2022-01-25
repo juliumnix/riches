@@ -4,7 +4,6 @@ import OpeningBalanceScreen from '../SignIn/pages/OpeningBalanceScreen';
 import UserNameScreen from '../SignIn/pages/UserNameScreen';
 import LoginScreen from '../Login/pages/LoginScreen';
 import { MainRoutes } from '../../Main/routes/index.routes';
-import { AutenticationExitStack } from './index.routes.exit';
 
 export type AutenticationParamList = {
   OpeningBalanceScreen: undefined;
@@ -15,15 +14,24 @@ export type AutenticationParamList = {
 
 const Stack = createNativeStackNavigator<AutenticationParamList>();
 
-export function AutenticationStack() {
+export function AutenticationExitStack() {
   return (
     <Stack.Navigator>
       <Stack.Screen
         options={{ headerShown: false }}
-        name="AutenticationExitStack"
-        component={AutenticationExitStack}
+        name="LoginScreen"
+        component={LoginScreen}
       />
-
+      <Stack.Screen
+        options={{ headerShown: false }}
+        name="OpeningBalanceScreen"
+        component={OpeningBalanceScreen}
+      />
+      <Stack.Screen
+        options={{ headerShown: false }}
+        name="UserNameScreen"
+        component={UserNameScreen}
+      />
       <Stack.Screen
         options={{ headerShown: false }}
         name="HomeApp"

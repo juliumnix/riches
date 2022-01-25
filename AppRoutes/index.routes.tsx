@@ -3,8 +3,9 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { MainRoutes } from '../modules/Main/routes/index.routes';
 import { AutenticationStack } from '../modules/Autentication/routes/index.routes';
 import { View, Image } from 'react-native';
+import { RouteTestStack } from '../modules/Main/routes/index.routes.teste';
 
-let idVBonito: string | null = null;
+let ID: string | null = null;
 export default function AppRoutes() {
   const [id, setId] = useState(null as string | null);
   const [loading, setLoading] = useState(true);
@@ -18,7 +19,7 @@ export default function AppRoutes() {
 
       if (value != null) {
         setId(value);
-        idVBonito = value;
+        ID = value;
       }
     } catch (e) {
       // error reading value
@@ -38,5 +39,5 @@ export default function AppRoutes() {
       </View>
     );
   }
-  return idVBonito != null ? <MainRoutes /> : <AutenticationStack />;
+  return ID != null ? <RouteTestStack /> : <AutenticationStack />;
 }
