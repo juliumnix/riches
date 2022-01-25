@@ -6,12 +6,14 @@ import * as S from './styles';
 type ButtonCompleteGoalProps = {
   check: boolean;
   value: number;
+  chave: number;
   onPress: (item) => void;
 };
 const ButtonCompleteGoal = ({
   check,
   onPress,
   value,
+  chave,
 }: ButtonCompleteGoalProps) => {
   const [checked, setChecked] = useState(false);
 
@@ -19,7 +21,7 @@ const ButtonCompleteGoal = ({
     setChecked(!checked);
   }
   return (
-    <View style={{ paddingBottom: 10 }}>
+    <View style={{ paddingBottom: 10 }} key={chave}>
       <S.Container onPress={onPress} isChecked={check}>
         <S.Value isChecked={check}>{value}</S.Value>
       </S.Container>

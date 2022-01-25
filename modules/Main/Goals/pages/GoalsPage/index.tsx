@@ -1,10 +1,11 @@
-import { useNavigation } from '@react-navigation/core';
-import React, { useEffect, useState } from 'react';
+import { useFocusEffect, useNavigation } from '@react-navigation/core';
+import React, { useCallback, useEffect, useState } from 'react';
 import { FlatList, Text, TouchableOpacity, View, Animated } from 'react-native';
 import { SvgXml } from 'react-native-svg';
 import { useGoal } from '../../../hooks/goal';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { RootStackParamList } from '../../../routes/index.routes';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 import * as S from './styles';
 import { StatusBar } from 'expo-status-bar';
@@ -35,12 +36,15 @@ function MiniPlusSVG() {
 type homeScreenProp = StackNavigationProp<RootStackParamList, 'GoalsPage'>;
 
 import { SharedElement } from 'react-navigation-shared-element';
+import api from '../../../utils/api';
+import { ip } from '../../../../../ip';
 
-type GoalProps = {
-  image: string;
-  name: string;
-  portion: number;
-  value: number;
+type GoalPropsPage = {
+  id_meta: number;
+  url_image: string;
+  nome: string;
+  numero_parcela: number;
+  valor: number;
 };
 
 const GoalsPage = () => {
@@ -51,74 +55,103 @@ const GoalsPage = () => {
     setImage,
     setPortion,
     setGoalFinalValue,
+    setIdGoal,
   } = useGoal();
   const navigation = useNavigation<homeScreenProp>();
-  const [goals, setGoals] = useState(goal);
+  const [goals, setGoals] = useState([] as GoalPropsPage[]);
+  const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    setGoals(getGoal());
-  }, [goal]);
+  useFocusEffect(
+    useCallback(() => {
+      if (navigation.isFocused()) {
+        getGoalsFromAPI();
+        setGoals(getGoal());
+      }
+    }, []),
+  );
 
-  function handleItemNavigation(item: GoalProps) {
-    setGoalName(item.name);
-    setImage(item.image);
-    setPortion(item.portion);
-    setGoalFinalValue(item.value);
+  async function getGoalsFromAPI() {
+    try {
+      const value = await AsyncStorage.getItem('@riches:id_usuario');
+      const response = await api.get(`http://${ip}:3000/meta/${value}`);
+      setGoals(response.data);
+    } catch (error) {
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  function handleItemNavigation(item: GoalPropsPage) {
+    setGoalName(item.nome);
+    setImage(item.url_image);
+    setPortion(item.numero_parcela);
+    setGoalFinalValue(item.valor);
+    setIdGoal(item.id_meta);
     navigation.navigate('EditGoal');
   }
 
   return (
     <S.Container>
       <StatusBar backgroundColor="#fafafa" />
-      <S.Header>
-        <S.WrapperTitle>
-          <S.Title>Metas</S.Title>
-        </S.WrapperTitle>
-
-        <TouchableOpacity onPress={() => navigation.navigate('CreateGoal')}>
-          <PlusSVG />
-        </TouchableOpacity>
-      </S.Header>
-      <View style={{ flex: 1, marginBottom: 10 }}>
-        {goal.length > 0 ? (
-          <FlatList
-            keyExtractor={photo => photo.name}
-            data={goals}
-            numColumns={2}
-            ItemSeparatorComponent={() => <S.Separator />}
-            columnWrapperStyle={{ justifyContent: 'space-between' }}
-            style={{ width: '100%' }}
-            showsVerticalScrollIndicator={false}
-            renderItem={({ item }) => (
-              <TouchableOpacity onPress={() => handleItemNavigation(item)}>
-                <Animated.View style={{ borderRadius: 20 }}>
-                  <SharedElement id={item.image} style={{ borderRadius: 20 }}>
-                    <S.ImageItem
-                      source={{ uri: item.image }}
-                      imageStyle={{ borderRadius: 20, opacity: 0.6 }}
-                      resizeMode="cover"
-                    >
-                      <S.ImageDetails>
-                        <S.ImageTitle> {item.name}</S.ImageTitle>
-                      </S.ImageDetails>
-                    </S.ImageItem>
-                  </SharedElement>
-                </Animated.View>
-              </TouchableOpacity>
+      {loading ? (
+        <></>
+      ) : (
+        <>
+          <S.Header>
+            <S.WrapperTitle>
+              <S.Title>Metas</S.Title>
+            </S.WrapperTitle>
+            <TouchableOpacity onPress={() => navigation.navigate('CreateGoal')}>
+              <PlusSVG />
+            </TouchableOpacity>
+          </S.Header>
+          <View style={{ flex: 1, marginBottom: 10 }}>
+            {goals.length > 0 ? (
+              <FlatList
+                keyExtractor={photo => photo.nome}
+                data={goals}
+                numColumns={2}
+                ItemSeparatorComponent={() => <S.Separator />}
+                columnWrapperStyle={{ justifyContent: 'space-between' }}
+                style={{ width: '100%' }}
+                showsVerticalScrollIndicator={false}
+                renderItem={({ item }) => (
+                  <TouchableOpacity onPress={() => handleItemNavigation(item)}>
+                    <Animated.View style={{ borderRadius: 20 }}>
+                      <SharedElement
+                        id={item.url_image}
+                        style={{ borderRadius: 20 }}
+                      >
+                        <S.ImageItem
+                          source={{ uri: item.url_image }}
+                          imageStyle={{ borderRadius: 20, opacity: 0.6 }}
+                          resizeMode="cover"
+                        >
+                          <S.ImageDetails>
+                            <S.ImageTitle> {item.nome}</S.ImageTitle>
+                          </S.ImageDetails>
+                        </S.ImageItem>
+                      </SharedElement>
+                    </Animated.View>
+                  </TouchableOpacity>
+                )}
+              />
+            ) : (
+              <S.EmptyListWrapper>
+                <S.EmptyListTitle>
+                  Você não possui metas registradas
+                </S.EmptyListTitle>
+                <S.EmptyListSubtitleWrapper>
+                  <S.EmptyListSubtitle>
+                    Adicione metas no botão
+                  </S.EmptyListSubtitle>
+                  <MiniPlusSVG />
+                </S.EmptyListSubtitleWrapper>
+              </S.EmptyListWrapper>
             )}
-          />
-        ) : (
-          <S.EmptyListWrapper>
-            <S.EmptyListTitle>
-              Você não possui metas registradas
-            </S.EmptyListTitle>
-            <S.EmptyListSubtitleWrapper>
-              <S.EmptyListSubtitle>Adicione metas no botão</S.EmptyListSubtitle>
-              <MiniPlusSVG />
-            </S.EmptyListSubtitleWrapper>
-          </S.EmptyListWrapper>
-        )}
-      </View>
+          </View>
+        </>
+      )}
     </S.Container>
   );
 };

@@ -12,8 +12,7 @@ export const CloseModal = styled.TouchableOpacity`
 `;
 
 export const Container = styled.View`
-  flex: auto;
-  height: 54%;
+  height: 64%;
   width: 100%;
   background-color: #fafafa;
   border-top-left-radius: 50px;

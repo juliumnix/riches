@@ -4,6 +4,13 @@ import { LinearGradient } from 'expo-linear-gradient';
 import { SvgXml } from 'react-native-svg';
 
 import * as S from './styles';
+import { StackNavigationProp } from '@react-navigation/stack';
+import { HomeStackParamList } from '../../routes/index.routes';
+
+type CardComponentProps = StackNavigationProp<
+  HomeStackParamList,
+  'HistoryPage'
+>;
 
 type CardBalanceProps = {
   balance: number;
@@ -28,10 +35,10 @@ export default function CardBalance({
   percentage,
   visibleLine,
 }: CardBalanceProps) {
-  const navigation = useNavigation();
+  const navigation = useNavigation<CardComponentProps>();
 
   function navigateToTransactions() {
-    navigation.navigate('paginaTemporaria');
+    navigation.navigate('HistoryPage');
   }
 
   return (

@@ -15,7 +15,7 @@ export default function AppRoutes() {
   async function getData() {
     try {
       const value = await AsyncStorage.getItem('@riches:id_usuario');
-      console.log(value);
+
       if (value != null) {
         setId(value);
         idVBonito = value;
