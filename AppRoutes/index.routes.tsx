@@ -29,12 +29,12 @@ export default function AppRoutes() {
   if (loading) {
     return (
       <View style={{ flex: 1 }}>
-        <Image
+        {/* <Image
           style={{ height: '100%', width: '100%' }}
           source={{
             uri: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT8zEQ0vNckHp23eQQA5aGLU9Q5ak7NBtZBt0WLifN-fYcEkLPXi36MwKgY2sS_H4oYTf4&usqp=CAU',
           }}
-        />
+        /> */}
       </View>
     );
   }
