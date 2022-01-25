@@ -220,7 +220,7 @@ export default function HomeScreen() {
       <S.GoalsHeader>
         <S.GoalsHeaderFirstLine>
           <S.GoalTitle>Metas</S.GoalTitle>
-          <TouchableOpacity>
+          <TouchableOpacity onPress={() => navigation.navigate('Goal')}>
             <S.GoalsSeeAll>Veja todos</S.GoalsSeeAll>
           </TouchableOpacity>
         </S.GoalsHeaderFirstLine>
