@@ -1,12 +1,26 @@
 import { StatusBar } from 'expo-status-bar';
-import React from 'react';
+import React, { useState } from 'react';
 import * as S from './styles';
 import { SvgXml } from 'react-native-svg';
 import { useGoal } from '../../../../Main/hooks/goal';
+import { useNavigation } from '@react-navigation/native';
+import { StackNavigationProp } from '@react-navigation/stack';
+import { AutenticationParamList } from '../../../routes/index.routes';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { ip } from '../../../../../ip';
+import api from '../../../../Main/utils/api';
+
+type UserNameScreenProps = StackNavigationProp<
+  AutenticationParamList,
+  'OpeningBalanceScreen'
+>;
 
 export default function OpeningBalanceScreen() {
   //remover essa desgraça aqui
   const { handleGoalValue } = useGoal();
+  const [balance, setBalance] = useState(0);
+  const navigation = useNavigation<UserNameScreenProps>();
+  let id = '';
   function ArrowSVG() {
     const svg = `
     <svg width="30" height="30" viewBox="0 0 30 30" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -18,6 +32,27 @@ export default function OpeningBalanceScreen() {
     return <Svg />;
   }
 
+  const getData = async () => {
+    try {
+      const value = await AsyncStorage.getItem('@riches:id_usuario');
+      if (value !== null) {
+        id = value;
+      }
+    } catch (e) {
+      // error reading value
+    }
+  };
+
+  async function updateBalance() {
+    try {
+      await getData();
+      await api.put(`http://${ip}:3000/usuarios/saldo/` + id, {
+        saldo: balance,
+      });
+      navigation.navigate('HomeApp');
+    } catch (error) {}
+  }
+
   return (
     <S.Container>
       <S.WrapperContent>
@@ -25,7 +60,7 @@ export default function OpeningBalanceScreen() {
         <S.ContainerMoney>
           <S.Money
             onChangeText={text => {
-              handleGoalValue(Number(text));
+              setBalance(Number(text));
             }}
             placeholder="R$: 0,00"
           />
@@ -33,7 +68,7 @@ export default function OpeningBalanceScreen() {
         </S.ContainerMoney>
       </S.WrapperContent>
       <S.WrapperNextButton>
-        <S.Next>
+        <S.Next onPress={() => updateBalance()}>
           <ArrowSVG />
         </S.Next>
       </S.WrapperNextButton>

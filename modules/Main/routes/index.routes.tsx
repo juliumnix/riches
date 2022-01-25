@@ -6,6 +6,7 @@ import { CryptoStack } from '../Crypto/routes/index.routes';
 import { GoalStack } from '../Goals/routes/index.routes';
 import { getFocusedRouteNameFromRoute } from '@react-navigation/native';
 import { Ionicons, Feather, FontAwesome5 } from '@expo/vector-icons';
+import { AutenticationStack } from '../../Autentication/routes/index.routes';
 
 export type RootStackParamList = {
   CryptoPage: undefined;
@@ -18,9 +19,29 @@ export type RootStackParamList = {
 
 const Tab = createBottomTabNavigator();
 
-const getTabBarStyle = route => {
-  const routeName = getFocusedRouteNameFromRoute(route) ?? 'Home';
+const getTabBarStyle = (route: any) => {
+  const routeName = getFocusedRouteNameFromRoute(route) ?? 'Goal';
   let display = routeName === 'CreateGoal' ? 'none' : 'flex';
+  return { display };
+};
+
+const getTabBarStyleExit = (route: any) => {
+  const routeName = getFocusedRouteNameFromRoute(route) ?? 'Config';
+  let display = routeName === 'LoginScreen' ? 'none' : 'flex';
+  return { display };
+};
+
+const getTabBarStyleHistory = (route: any) => {
+  const routeName = getFocusedRouteNameFromRoute(route) ?? 'Home';
+
+  let display = routeName === 'HistoryPage' ? 'none' : 'flex';
+  return { display };
+};
+
+const getTabBarStyleGoal = (route: any) => {
+  const routeName = getFocusedRouteNameFromRoute(route) ?? 'Goal';
+
+  let display = routeName === 'EditGoal' ? 'none' : 'flex';
   return { display };
 };
 
@@ -41,11 +62,12 @@ export function MainRoutes() {
       }}
     >
       <Tab.Screen
-        options={{
+        options={({ route }) => ({
+          tabBarStyle: getTabBarStyleHistory(route),
           tabBarIcon: ({ color }) => (
             <Feather name="home" size={24} color={color} />
           ),
-        }}
+        })}
         name="Home"
         component={HomeRoutes}
       />
@@ -61,7 +83,7 @@ export function MainRoutes() {
 
       <Tab.Screen
         options={({ route }) => ({
-          tabBarStyle: getTabBarStyle(route),
+          tabBarStyle: getTabBarStyleGoal(route),
           tabBarIcon: ({ color }) => (
             <Ionicons name="cloud-outline" size={24} color={color} />
           ),
@@ -72,7 +94,7 @@ export function MainRoutes() {
 
       <Tab.Screen
         options={({ route }) => ({
-          tabBarStyle: getTabBarStyle(route),
+          tabBarStyle: getTabBarStyleExit(route),
           tabBarIcon: ({ color }) => (
             <Feather name="settings" size={24} color={color} />
           ),

@@ -7,6 +7,7 @@ import { useNavigation } from '@react-navigation/core';
 import { AutenticationParamList } from '../../../routes/index.routes';
 import { StackNavigationProp } from '@react-navigation/stack';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { ip } from '../../../../../ip';
 
 type ModalSignInProps = StackNavigationProp<
   AutenticationParamList,
@@ -40,7 +41,7 @@ export default function ModalSignIn({ visible, closeModal, ...rest }: Props) {
     setEmailIncorrect(false);
     setPasswordIncorrect(false);
     try {
-      const response = await api.post('http://192.168.0.110:3000/usuarios', {
+      const response = await api.post(`http://${ip}:3000/usuarios`, {
         email: email,
         senha: password,
       });

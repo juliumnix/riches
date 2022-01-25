@@ -9,6 +9,8 @@ import { StackNavigationProp } from '@react-navigation/stack';
 import { ConfigStackParamList } from '../../routes/index.routes';
 import ModalCommon from '../../../components/Modal';
 import { useGoal } from '../../../hooks/goal';
+import api from '../../../utils/api';
+import { ip } from '../../../../../ip';
 
 function MoneySVG() {
   const svg = `
@@ -51,10 +53,12 @@ type ModalSignInProps = StackNavigationProp<
 
 export default function ConfigScreen() {
   const { handleGoalValue } = useGoal();
+  const [balance, setBalance] = useState(0);
   const [balanceVisible, setBalanceVisible] = useState(false);
   const [nameVisible, setNameVisible] = useState(false);
   const [name, setName] = useState('');
   const navigation = useNavigation<ModalSignInProps>();
+  let id = '';
 
   const deleteData = async () => {
     try {
@@ -64,6 +68,36 @@ export default function ConfigScreen() {
       // error reading value
     }
   };
+
+  const getData = async () => {
+    try {
+      const value = await AsyncStorage.getItem('@riches:id_usuario');
+      if (value !== null) {
+        id = value;
+      }
+    } catch (e) {
+      // error reading value
+    }
+  };
+
+  async function updateBalance() {
+    try {
+      await getData();
+      await api.put(`http://${ip}:3000/usuarios/saldo/` + id, {
+        saldo: balance,
+      });
+    } catch (error) {}
+  }
+
+  async function updateName() {
+    try {
+      await getData();
+      await api.put(`http://${ip}:3000/usuarios/` + id, {
+        nome: name,
+      });
+    } catch (error) {}
+  }
+
   return (
     <S.Container>
       <S.Header>
@@ -85,6 +119,7 @@ export default function ConfigScreen() {
       <StatusBar style="auto" />
       <ModalCommon
         sendData={() => {
+          updateBalance();
           setBalanceVisible(false);
         }}
         placeholder="R$: 0,00"
@@ -93,11 +128,14 @@ export default function ConfigScreen() {
         closeModal={() => {
           setBalanceVisible(false);
         }}
-        switchValue={(text: string) => handleGoalValue(Number(text))}
+        switchValue={(text: string) => setBalance(Number(text))}
       />
 
       <ModalCommon
-        sendData={() => setNameVisible(false)}
+        sendData={() => {
+          updateName();
+          setNameVisible(false);
+        }}
         placeholder="Ex: Pedro"
         title="Qual seu nome?"
         visible={nameVisible}

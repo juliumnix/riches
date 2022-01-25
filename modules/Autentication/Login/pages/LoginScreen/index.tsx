@@ -1,9 +1,10 @@
 import { StatusBar } from 'expo-status-bar';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { SvgXml } from 'react-native-svg';
 import ModalLogin from '../../components/ModalLogin';
 import ModalSignIn from '../../../SignIn/components/ModalSignIn';
 import * as S from './styles';
+import { Alert, BackHandler } from 'react-native';
 
 function RichesSVG() {
   const svg = `
@@ -18,6 +19,20 @@ function RichesSVG() {
 export default function LoginScreen() {
   const [modalLoginVisibility, setModalLoginVisibility] = useState(false);
   const [modalSignInVisibility, setModalSignInVisibility] = useState(false);
+
+  useEffect(() => {
+    const backAction = () => {
+      BackHandler.exitApp();
+      return true;
+    };
+
+    const backHandler = BackHandler.addEventListener(
+      'hardwareBackPress',
+      backAction,
+    );
+
+    return () => backHandler.remove();
+  }, []);
 
   function handleSetModalLoginVisibility() {
     setModalLoginVisibility(!modalLoginVisibility);
