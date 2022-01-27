@@ -118,6 +118,7 @@ export default function ConfigScreen() {
       </S.Buttons>
       <StatusBar style="auto" />
       <ModalCommon
+        keyboardType="numeric"
         sendData={() => {
           updateBalance();
           setBalanceVisible(false);
@@ -132,6 +133,7 @@ export default function ConfigScreen() {
       />
 
       <ModalCommon
+        keyboardType="default"
         sendData={() => {
           updateName();
           setNameVisible(false);

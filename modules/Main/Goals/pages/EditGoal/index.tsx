@@ -1,6 +1,12 @@
 import { useNavigation } from '@react-navigation/core';
 import React, { useEffect, useState } from 'react';
-import { Animated, FlatList, Text, TouchableOpacity, View } from 'react-native';
+import {
+  ActivityIndicator,
+  FlatList,
+  Text,
+  TouchableOpacity,
+  View,
+} from 'react-native';
 import { SvgXml } from 'react-native-svg';
 import { useGoal } from '../../../hooks/goal';
 import { StackNavigationProp } from '@react-navigation/stack';
@@ -37,6 +43,8 @@ const EditGoal = () => {
     Number((getGoalFinalValue() / getPortion()).toFixed(2)),
   );
 
+  const [loading, setLoading] = useState(true);
+
   useEffect(() => {
     getAPIData();
     return () => {
@@ -61,31 +69,34 @@ const EditGoal = () => {
       );
       testeNumero = Number(response.data.realizado);
       setSaveValue(Number(response.data.realizado));
-      teste();
-    } catch (error) {}
+      renderBalls();
+    } catch (error) {
+    } finally {
+      setLoading(false);
+    }
   }
 
-  let testeTop = getPortion();
-  function teste() {
+  let numberPortion = getPortion();
+  function renderBalls() {
     if (testeNumero > 0) {
       let numeroDeBolasPintadas = testeNumero / portionValue;
 
       while (numeroDeBolasPintadas > 0) {
         const objetoPintado = {
-          id: testeTop,
+          id: numberPortion,
           isChecked: true,
         };
         setArray(oldArray => [...oldArray, objetoPintado]);
         numeroDeBolasPintadas--;
-        testeTop--;
+        numberPortion--;
       }
     }
-    while (testeTop > 0) {
+    while (numberPortion > 0) {
       const ocjeto = {
-        id: testeTop,
+        id: numberPortion,
         isChecked: false,
       };
-      testeTop--;
+      numberPortion--;
       setArray(oldArray => [...oldArray, ocjeto]);
     }
   }
@@ -98,11 +109,9 @@ const EditGoal = () => {
           if (item2.isChecked) {
             setSaveValue(saveValue + portionValue);
             testeNumero = testeNumero + portionValue;
-            // setTotalResult(totalResult - portionValue);
           } else {
             setSaveValue(saveValue - portionValue);
             testeNumero = testeNumero - portionValue;
-            // setTotalResult(totalResult + portionValue);
           }
         }
 
@@ -131,49 +140,57 @@ const EditGoal = () => {
         </SharedElement>
       </S.WrapperDistance>
 
-      <S.WrapperDistance>
-        <S.WrapperGoalInfo>
-          <S.WrapperInfoBlock>
-            <S.InfoTitle>Meta</S.InfoTitle>
-            <S.InfoValue isSafe={false}>R$: {getGoalFinalValue()}</S.InfoValue>
-          </S.WrapperInfoBlock>
-          <S.WrapperInfoBlock>
-            <S.InfoTitle>Salvo</S.InfoTitle>
-            <S.InfoValue isSafe={true}>R$: {saveValue}</S.InfoValue>
-          </S.WrapperInfoBlock>
-        </S.WrapperGoalInfo>
-      </S.WrapperDistance>
-      <S.WrapperPortionInfo>
-        <S.WrapperPortionInfoTitle>Parcelas</S.WrapperPortionInfoTitle>
-        <S.WrapperPortionDiscount>
-          Falta um total de:{' '}
-          <S.InfoValue isSafe={true}>
-            R$: {totalResult - testeNumero}
-          </S.InfoValue>
-        </S.WrapperPortionDiscount>
-        <S.WrapperPortionValue>
-          Valor de cada parcela:
-          <S.InfoValue isSafe={true}> R$: {portionValue}</S.InfoValue>
-        </S.WrapperPortionValue>
-      </S.WrapperPortionInfo>
-      <S.WrapperBalls>
-        <FlatList
-          keyExtractor={item => item.id.toString()}
-          data={array}
-          horizontal
-          renderItem={({ item }) => (
-            <>
-              <ButtonCompleteGoal
-                chave={item.id}
-                onPress={() => setChecked(item)}
-                check={item.isChecked}
-                value={item.id}
-              />
-              <View style={{ width: 10 }} />
-            </>
-          )}
-        />
-      </S.WrapperBalls>
+      {loading ? (
+        <ActivityIndicator size="large" color="green" />
+      ) : (
+        <>
+          <S.WrapperDistance>
+            <S.WrapperGoalInfo>
+              <S.WrapperInfoBlock>
+                <S.InfoTitle>Meta</S.InfoTitle>
+                <S.InfoValue isSafe={false}>
+                  R$: {getGoalFinalValue()}
+                </S.InfoValue>
+              </S.WrapperInfoBlock>
+              <S.WrapperInfoBlock>
+                <S.InfoTitle>Salvo</S.InfoTitle>
+                <S.InfoValue isSafe={true}>R$: {saveValue}</S.InfoValue>
+              </S.WrapperInfoBlock>
+            </S.WrapperGoalInfo>
+          </S.WrapperDistance>
+          <S.WrapperPortionInfo>
+            <S.WrapperPortionInfoTitle>Parcelas</S.WrapperPortionInfoTitle>
+            <S.WrapperPortionDiscount>
+              Falta um total de:{' '}
+              <S.InfoValue isSafe={true}>
+                R$: {totalResult - testeNumero}
+              </S.InfoValue>
+            </S.WrapperPortionDiscount>
+            <S.WrapperPortionValue>
+              Valor de cada parcela:
+              <S.InfoValue isSafe={true}> R$: {portionValue}</S.InfoValue>
+            </S.WrapperPortionValue>
+          </S.WrapperPortionInfo>
+          <S.WrapperBalls>
+            <FlatList
+              keyExtractor={item => item.id.toString()}
+              data={array}
+              horizontal
+              renderItem={({ item }) => (
+                <>
+                  <ButtonCompleteGoal
+                    chave={item.id}
+                    onPress={() => setChecked(item)}
+                    check={item.isChecked}
+                    value={item.id}
+                  />
+                  <View style={{ width: 10 }} />
+                </>
+              )}
+            />
+          </S.WrapperBalls>
+        </>
+      )}
     </S.Container>
   );
 };

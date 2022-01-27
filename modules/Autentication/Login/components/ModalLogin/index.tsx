@@ -53,7 +53,7 @@ export default function ModalLogin({
 
       await AsyncStorage.setItem('@riches:id_usuario', response.data);
       setId(response.data);
-      close();
+      // close();
       navigation.reset({ routes: [{ name: 'HomeApp' }] });
     } catch (error) {
       setEmailIncorrect(true);

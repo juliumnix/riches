@@ -4,9 +4,7 @@ import * as S from './styles';
 import CardBalance from '../../components/CardBalance';
 import { SvgXml } from 'react-native-svg';
 import {
-  BackHandler,
   FlatList,
-  Text,
   TouchableOpacity,
   View,
   ActivityIndicator,
@@ -115,12 +113,6 @@ export default function HomeScreen() {
       }
     }, []),
   );
-
-  // useEffect(() => {
-  //   return () => {
-  //     clearData();
-  //   };
-  // }, []);
 
   function getAPI() {
     try {
@@ -256,13 +248,13 @@ export default function HomeScreen() {
             )}
           </S.Goals>
           <ModalInput
-            balance={balance}
+            balance={balance!}
             sendData={getInfoFromDatabase}
             visible={modalInputVisibility}
             closeModal={() => handleSetModalInputVisibility()}
           />
           <ModalOutput
-            balance={balance}
+            balance={balance!}
             sendData={getInfoFromDatabase}
             visible={modalOutputVisibility}
             closeModal={() => handleSetModalOutputVisibility()}
