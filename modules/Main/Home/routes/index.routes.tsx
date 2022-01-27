@@ -20,7 +20,6 @@ export function HomeRoutes() {
         component={HomeScreen}
       />
 
-      {/* //PAGINA TEMPORARIA, APOS A APRESENTACAO REMOVER DAQUI */}
       <Stack.Screen
         options={{ headerShown: false }}
         name="HistoryPage"

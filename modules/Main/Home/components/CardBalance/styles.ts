@@ -31,7 +31,7 @@ export const WrapperVisibleLineCurrency = styled.View`
 
 export const LineCurrency = styled.View`
   background-color: #fafafa;
-  width: 75%;
+  width: 65%;
   height: 3px;
   border-radius: 3px;
   margin-left: 10px;
@@ -51,14 +51,13 @@ export const Percentage = styled.Text`
 
 export const WrapperVisibleLineBalance = styled.View`
   flex-direction: row;
-  justify-content: center;
+  justify-content: space-between;
   align-items: center;
-  padding-left: 1px;
 `;
 
 export const LineBalance = styled.View`
   background-color: #fafafa;
-  width: 80%;
+  width: 75%;
   height: 5px;
   border-radius: 5px;
   margin-left: 10px;

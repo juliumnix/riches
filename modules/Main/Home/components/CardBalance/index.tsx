@@ -76,8 +76,8 @@ export default function CardBalance({
             <S.WrapperVisibleLineCurrency>
               <S.TodaysMoney>R$: {currency}</S.TodaysMoney>
               <S.wrapperPercentage>
-                <ArrowUpSVG />
-                <S.Percentage>{percentage}%</S.Percentage>
+                {/* <ArrowUpSVG />
+                <S.Percentage>{percentage}%</S.Percentage> */}
               </S.wrapperPercentage>
             </S.WrapperVisibleLineCurrency>
           )}

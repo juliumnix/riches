@@ -38,6 +38,7 @@ type homeScreenProp = StackNavigationProp<RootStackParamList, 'GoalsPage'>;
 import { SharedElement } from 'react-navigation-shared-element';
 import api from '../../../utils/api';
 import { ip } from '../../../../../ip';
+import Loading from '../../../components/Loading';
 
 type GoalPropsPage = {
   id_meta: number;
@@ -58,12 +59,13 @@ const GoalsPage = () => {
     setIdGoal,
   } = useGoal();
   const navigation = useNavigation<homeScreenProp>();
-  const [goals, setGoals] = useState([] as GoalPropsPage[]);
+  const [goals, setGoals] = useState<GoalPropsPage[]>([]);
   const [loading, setLoading] = useState(true);
 
   useFocusEffect(
     useCallback(() => {
       if (navigation.isFocused()) {
+        setLoading(true);
         getGoalsFromAPI();
         setGoals(getGoal());
       }
@@ -94,7 +96,9 @@ const GoalsPage = () => {
     <S.Container>
       <StatusBar backgroundColor="#fafafa" />
       {loading ? (
-        <></>
+        <>
+          <Loading visible={loading} />
+        </>
       ) : (
         <>
           <S.Header>
