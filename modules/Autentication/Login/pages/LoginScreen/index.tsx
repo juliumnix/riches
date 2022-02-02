@@ -4,7 +4,7 @@ import { SvgXml } from 'react-native-svg';
 import ModalLogin from '../../components/ModalLogin';
 import ModalSignIn from '../../../SignIn/components/ModalSignIn';
 import * as S from './styles';
-import { Alert, BackHandler } from 'react-native';
+import { Alert, BackHandler, Text } from 'react-native';
 import TypeWriter from 'react-native-typewriter';
 
 function RichesSVG() {
@@ -54,7 +54,10 @@ export default function LoginScreen() {
         <StatusBar style="auto" />
       </S.Container>
       <S.WrapperInitButton>
-        <S.InitButton onPress={handleSetModalLoginVisibility}>
+        <S.InitButton
+          testID="ConfirmarButton"
+          onPress={handleSetModalLoginVisibility}
+        >
           <S.TextButton>Começar</S.TextButton>
         </S.InitButton>
       </S.WrapperInitButton>

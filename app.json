@@ -13,7 +13,9 @@
     "updates": {
       "fallbackToCacheTimeout": 0
     },
-    "assetBundlePatterns": ["**/*"],
+    "assetBundlePatterns": [
+      "**/*"
+    ],
     "ios": {
       "supportsTablet": true
     },
@@ -21,7 +23,8 @@
       "adaptiveIcon": {
         "foregroundImage": "./assets/SplashAdaptativa.png",
         "backgroundColor": "#14D063"
-      }
+      },
+      "package": "com.riches"
     },
     "web": {
       "favicon": "./assets/favicon.png"
