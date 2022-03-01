@@ -3,7 +3,12 @@ import React, { useCallback, useEffect, useState } from 'react';
 import * as S from './styles';
 import CardBalance from '../../components/CardBalance';
 import { SvgXml } from 'react-native-svg';
-import { FlatList, Text, TouchableOpacity, View } from 'react-native';
+import {
+  FlatList,
+  TouchableOpacity,
+  View,
+  ActivityIndicator,
+} from 'react-native';
 import { getHours } from 'date-fns';
 import { useGoal } from '../../../hooks/goal';
 
@@ -15,6 +20,8 @@ import api from '../../../utils/api';
 import { ip } from '../../../../../ip';
 import { useFocusEffect, useNavigation } from '@react-navigation/native';
 import GoalIndicator from '../../components/GoalIndicator';
+import Loading from '../../../components/Loading';
+import { LinearGradient } from 'expo-linear-gradient';
 
 const teste = [
   { id: 1, valor: '10' },
@@ -84,11 +91,13 @@ type GoalPropsPage = {
 export default function HomeScreen() {
   const [balanceVisibility, setBalanceVisibility] = useState(false);
   const [hours, setHours] = useState(0);
-  const { goalValue, handleGoalValue } = useGoal();
+
   const [modalInputVisibility, setModalInputVisibility] = useState(false);
   const [modalOutputVisibility, setModalOutputVisibility] = useState(false);
   const [name, setName] = useState('');
-  const [balance, setBalance] = useState(0);
+  const [balance, setBalance] = useState<number | null>(null);
+
+  const [loading, setLoading] = useState(true);
 
   const [goals, setGoals] = useState([] as GoalPropsPage[]);
 
@@ -97,13 +106,23 @@ export default function HomeScreen() {
   useFocusEffect(
     useCallback(() => {
       if (navigation.isFocused()) {
-        const result = getHours(new Date().getTime()) - 3;
+        setLoading(true);
+        const result = getHours(new Date().getTime());
         setHours(result);
-        getInfoFromDatabase();
-        getGoalsFromAPI();
+        getAPI();
       }
     }, []),
   );
+
+  function getAPI() {
+    try {
+      getInfoFromDatabase();
+      getGoalsFromAPI();
+    } catch (error) {
+    } finally {
+      setLoading(false);
+    }
+  }
 
   async function getGoalsFromAPI() {
     try {
@@ -123,26 +142,6 @@ export default function HomeScreen() {
 
   function handleSetModalOutputVisibility() {
     setModalOutputVisibility(!modalOutputVisibility);
-  }
-
-  function addGoalValue(value: string) {
-    const numeredValue = Number(value);
-    if (numeredValue > 0) {
-      const oldGoal = goalValue;
-      const newGoal = oldGoal + numeredValue;
-      handleGoalValue(newGoal);
-      setBalance(goalValue);
-    }
-  }
-
-  function removeGoalValue(value: string) {
-    const numeredValue = Number(value);
-    if (numeredValue > 0) {
-      const oldGoal = goalValue;
-      const newGoal = oldGoal - numeredValue;
-      handleGoalValue(newGoal);
-      setBalance(goalValue);
-    }
   }
 
   async function getInfoFromDatabase() {
@@ -168,82 +167,101 @@ export default function HomeScreen() {
 
   return (
     <S.Container>
-      <S.WrapperTitle>
-        <S.WrapperFirstLine>
-          <S.WrapperHelloName>
-            <HelloSVG />
-            <S.Name>{name}</S.Name>
-          </S.WrapperHelloName>
-          <TouchableOpacity onPress={handleSetBalanceVisibility}>
-            {balanceVisibility == true ? <CloseViewSVG /> : <ViewSVG />}
-          </TouchableOpacity>
-        </S.WrapperFirstLine>
-        {getDescriptionHours()}
-      </S.WrapperTitle>
-      <S.WrapperCardBalance>
-        <CardBalance
-          balance={balance}
-          currency={balance}
-          percentage={0}
-          visibleLine={balanceVisibility}
-        />
-      </S.WrapperCardBalance>
-      <S.ButtonsBalance>
-        <S.ButtonBalance onPress={() => handleSetModalInputVisibility()}>
-          <S.TitleButtonBalanceUp>Entrada</S.TitleButtonBalanceUp>
-        </S.ButtonBalance>
-        <S.ButtonBalance onPress={() => handleSetModalOutputVisibility()}>
-          <S.TitleButtonBalanceDown>Saída</S.TitleButtonBalanceDown>
-        </S.ButtonBalance>
-      </S.ButtonsBalance>
-      <S.GoalsHeader>
-        <S.GoalsHeaderFirstLine>
-          <S.GoalTitle>Metas</S.GoalTitle>
-          <TouchableOpacity>
-            <S.GoalsSeeAll>Veja todos</S.GoalsSeeAll>
-          </TouchableOpacity>
-        </S.GoalsHeaderFirstLine>
-        <S.GoalsSubtitle>Principais metas</S.GoalsSubtitle>
-      </S.GoalsHeader>
-      <S.Goals>
-        {teste == [] ? (
-          <S.WrapperWithoutGoals>
-            <WithoutGoalsSVG />
-            <S.WithoutGoalsText>
-              Você não possui metas registradas
-            </S.WithoutGoalsText>
-          </S.WrapperWithoutGoals>
-        ) : (
-          <FlatList
-            showsVerticalScrollIndicator={false}
-            keyExtractor={item => String(item.id_meta)}
-            data={goals}
-            renderItem={({ item }) => (
-              <View style={{ paddingBottom: 10 }}>
-                <GoalIndicator
-                  url={item.url_image}
-                  titulo={item.nome}
-                  meta={item.valor}
-                  realizado={item.realizado}
-                />
-              </View>
+      {loading ? (
+        <Loading visible={loading} />
+      ) : (
+        <>
+          <S.WrapperTitle>
+            <S.WrapperFirstLine>
+              <S.WrapperHelloName>
+                <HelloSVG />
+                <S.Name>{name}</S.Name>
+              </S.WrapperHelloName>
+              <TouchableOpacity onPress={handleSetBalanceVisibility}>
+                {balanceVisibility == true ? <CloseViewSVG /> : <ViewSVG />}
+              </TouchableOpacity>
+            </S.WrapperFirstLine>
+            {getDescriptionHours()}
+          </S.WrapperTitle>
+          <S.WrapperCardBalance>
+            {balance == null ? (
+              <S.WrapperPlaceholder>
+                <LinearGradient
+                  colors={['#B0B0B0', '#FAFAFA']}
+                  style={{ flex: 1, borderRadius: 20 }}
+                >
+                  <S.ContainerPlaceholder>
+                    <ActivityIndicator size="large" color="green" />
+                  </S.ContainerPlaceholder>
+                </LinearGradient>
+              </S.WrapperPlaceholder>
+            ) : (
+              <CardBalance
+                balance={balance}
+                currency={balance}
+                percentage={0}
+                visibleLine={balanceVisibility}
+              />
             )}
+          </S.WrapperCardBalance>
+          <S.ButtonsBalance>
+            <S.ButtonBalance onPress={() => handleSetModalInputVisibility()}>
+              <S.TitleButtonBalanceUp>Entrada</S.TitleButtonBalanceUp>
+            </S.ButtonBalance>
+            <S.ButtonBalance onPress={() => handleSetModalOutputVisibility()}>
+              <S.TitleButtonBalanceDown>Saída</S.TitleButtonBalanceDown>
+            </S.ButtonBalance>
+          </S.ButtonsBalance>
+          <S.GoalsHeader>
+            <S.GoalsHeaderFirstLine>
+              <S.GoalTitle>Metas</S.GoalTitle>
+              <TouchableOpacity onPress={() => navigation.navigate('Goal')}>
+                <S.GoalsSeeAll>Veja todos</S.GoalsSeeAll>
+              </TouchableOpacity>
+            </S.GoalsHeaderFirstLine>
+            <S.GoalsSubtitle>Principais metas</S.GoalsSubtitle>
+          </S.GoalsHeader>
+          <S.Goals>
+            {teste == [] ? (
+              <S.WrapperWithoutGoals>
+                <WithoutGoalsSVG />
+                <S.WithoutGoalsText>
+                  Você não possui metas registradas
+                </S.WithoutGoalsText>
+              </S.WrapperWithoutGoals>
+            ) : (
+              <FlatList
+                showsVerticalScrollIndicator={false}
+                keyExtractor={item => String(item.id_meta)}
+                data={goals}
+                renderItem={({ item }) => (
+                  <View style={{ paddingBottom: 10 }}>
+                    <GoalIndicator
+                      url={item.url_image}
+                      titulo={item.nome}
+                      meta={item.valor}
+                      realizado={item.realizado}
+                    />
+                  </View>
+                )}
+              />
+            )}
+          </S.Goals>
+          <ModalInput
+            balance={balance!}
+            sendData={getInfoFromDatabase}
+            visible={modalInputVisibility}
+            closeModal={() => handleSetModalInputVisibility()}
           />
-        )}
-      </S.Goals>
-      <ModalInput
-        balance={balance}
-        sendData={getInfoFromDatabase}
-        visible={modalInputVisibility}
-        closeModal={() => handleSetModalInputVisibility()}
-      />
-      <ModalOutput
-        balance={balance}
-        sendData={getInfoFromDatabase}
-        visible={modalOutputVisibility}
-        closeModal={() => handleSetModalOutputVisibility()}
-      />
-      <StatusBar style="auto" />
+          <ModalOutput
+            balance={balance!}
+            sendData={getInfoFromDatabase}
+            visible={modalOutputVisibility}
+            closeModal={() => handleSetModalOutputVisibility()}
+          />
+          <StatusBar style="auto" />
+        </>
+      )}
     </S.Container>
   );
 }

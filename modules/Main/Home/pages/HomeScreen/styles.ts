@@ -116,3 +116,17 @@ export const WithoutGoalsText = styled.Text`
 export const ListGoals = styled.FlatList`
   flex: 1;
 `;
+
+export const WrapperPlaceholder = styled.TouchableOpacity`
+  min-width: 110%;
+  height: 182px;
+`;
+
+export const ContainerPlaceholder = styled.View`
+  /* padding-top: 23px;
+  padding-left: 23px;
+  padding-right: 23px; */
+  justify-content: center;
+  align-items: center;
+  flex: 1;
+`;

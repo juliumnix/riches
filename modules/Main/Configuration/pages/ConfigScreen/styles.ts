@@ -27,8 +27,8 @@ export const Buttons = styled.View`
 `;
 
 export const Button = styled.TouchableOpacity`
-  width: 150px;
-  height: 150px;
+  width: 43%;
+  height: 41.5%;
   background-color: #ffffff;
   border-radius: 20px;
   justify-content: space-between;
@@ -42,6 +42,6 @@ export const Button = styled.TouchableOpacity`
 export const ButtonIcon = styled.View``;
 
 export const ButtonTitle = styled.Text`
-  font-size: 18px;
+  font-size: 16px;
   color: #484848;
 `;

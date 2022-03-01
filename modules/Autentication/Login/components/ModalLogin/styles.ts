@@ -8,7 +8,7 @@ export const ModalContainer = styled.View`
 `;
 
 export const CloseModal = styled.TouchableOpacity`
-  height: 46%;
+  height: 30%;
   width: 100%;
 `;
 

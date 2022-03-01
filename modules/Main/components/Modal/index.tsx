@@ -11,6 +11,7 @@ type ModalCommonProps = {
   switchValue: (value: string) => void;
   placeholder: string;
   sendData: () => void;
+  keyboardType: 'default' | 'email-address' | 'numeric' | 'phone-pad';
 };
 
 function ArrowSVG() {
@@ -31,6 +32,7 @@ const ModalCommon = ({
   placeholder,
   sendData,
   switchValue,
+  keyboardType,
   ...rest
 }: ModalCommonProps) => {
   return (
@@ -58,6 +60,7 @@ const ModalCommon = ({
           </S.WrapperTitle>
           <S.ContainerMoney>
             <S.Money
+              keyboardType={keyboardType}
               onChangeText={text => {
                 switchValue(text);
               }}

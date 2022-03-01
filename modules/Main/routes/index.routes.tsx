@@ -19,32 +19,6 @@ export type RootStackParamList = {
 
 const Tab = createBottomTabNavigator();
 
-const getTabBarStyle = (route: any) => {
-  const routeName = getFocusedRouteNameFromRoute(route) ?? 'Goal';
-  let display = routeName === 'CreateGoal' ? 'none' : 'flex';
-  return { display };
-};
-
-const getTabBarStyleExit = (route: any) => {
-  const routeName = getFocusedRouteNameFromRoute(route) ?? 'Config';
-  let display = routeName === 'LoginScreen' ? 'none' : 'flex';
-  return { display };
-};
-
-const getTabBarStyleHistory = (route: any) => {
-  const routeName = getFocusedRouteNameFromRoute(route) ?? 'Home';
-
-  let display = routeName === 'HistoryPage' ? 'none' : 'flex';
-  return { display };
-};
-
-const getTabBarStyleGoal = (route: any) => {
-  const routeName = getFocusedRouteNameFromRoute(route) ?? 'Goal';
-
-  let display = routeName === 'EditGoal' ? 'none' : 'flex';
-  return { display };
-};
-
 export function MainRoutes() {
   return (
     <Tab.Navigator
@@ -63,7 +37,6 @@ export function MainRoutes() {
     >
       <Tab.Screen
         options={({ route }) => ({
-          tabBarStyle: getTabBarStyleHistory(route),
           tabBarIcon: ({ color }) => (
             <Feather name="home" size={24} color={color} />
           ),
@@ -83,7 +56,6 @@ export function MainRoutes() {
 
       <Tab.Screen
         options={({ route }) => ({
-          tabBarStyle: getTabBarStyleGoal(route),
           tabBarIcon: ({ color }) => (
             <Ionicons name="cloud-outline" size={24} color={color} />
           ),
@@ -94,7 +66,6 @@ export function MainRoutes() {
 
       <Tab.Screen
         options={({ route }) => ({
-          tabBarStyle: getTabBarStyleExit(route),
           tabBarIcon: ({ color }) => (
             <Feather name="settings" size={24} color={color} />
           ),

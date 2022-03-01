@@ -5,6 +5,7 @@ import ModalLogin from '../../components/ModalLogin';
 import ModalSignIn from '../../../SignIn/components/ModalSignIn';
 import * as S from './styles';
 import { Alert, BackHandler } from 'react-native';
+import TypeWriter from 'react-native-typewriter';
 
 function RichesSVG() {
   const svg = `
@@ -20,20 +21,6 @@ export default function LoginScreen() {
   const [modalLoginVisibility, setModalLoginVisibility] = useState(false);
   const [modalSignInVisibility, setModalSignInVisibility] = useState(false);
 
-  useEffect(() => {
-    const backAction = () => {
-      BackHandler.exitApp();
-      return true;
-    };
-
-    const backHandler = BackHandler.addEventListener(
-      'hardwareBackPress',
-      backAction,
-    );
-
-    return () => backHandler.remove();
-  }, []);
-
   function handleSetModalLoginVisibility() {
     setModalLoginVisibility(!modalLoginVisibility);
   }
@@ -43,31 +30,34 @@ export default function LoginScreen() {
   }
 
   return (
-    <S.Container>
-      <RichesSVG />
-      <S.Message>
-        <S.NormalText>Sua nova</S.NormalText>
-        <S.NormalText>vida financeira</S.NormalText>
-        <S.LastLineMessage>
-          <S.NormalText>começa</S.NormalText>
-          <S.BoldText>aqui.</S.BoldText>
-        </S.LastLineMessage>
-      </S.Message>
+    <>
+      <S.Container showsVerticalScrollIndicator={false}>
+        <RichesSVG />
+        <S.Message>
+          <TypeWriter typing={1}>
+            <S.NormalText>Sua nova {'\n'}</S.NormalText>
+            <S.NormalText>vida financeira {'\n'}</S.NormalText>
+            <S.NormalText>começa </S.NormalText>
+            <S.BoldText>aqui.</S.BoldText>
+          </TypeWriter>
+        </S.Message>
+
+        <ModalLogin
+          closeModal={handleSetModalLoginVisibility}
+          visible={modalLoginVisibility}
+          openModalSignIn={handleSetModalSignInVisibility}
+        />
+        <ModalSignIn
+          closeModal={handleSetModalSignInVisibility}
+          visible={modalSignInVisibility}
+        />
+        <StatusBar style="auto" />
+      </S.Container>
       <S.WrapperInitButton>
         <S.InitButton onPress={handleSetModalLoginVisibility}>
           <S.TextButton>Começar</S.TextButton>
         </S.InitButton>
       </S.WrapperInitButton>
-      <ModalLogin
-        closeModal={handleSetModalLoginVisibility}
-        visible={modalLoginVisibility}
-        openModalSignIn={handleSetModalSignInVisibility}
-      />
-      <ModalSignIn
-        closeModal={handleSetModalSignInVisibility}
-        visible={modalSignInVisibility}
-      />
-      <StatusBar style="auto" />
-    </S.Container>
+    </>
   );
 }

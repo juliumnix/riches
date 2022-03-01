@@ -2,6 +2,7 @@ import styled from 'styled-components/native';
 
 export const Container = styled.ScrollView`
   background-color: #fafafa;
+
   padding-left: 10%;
   padding-top: 10px;
   padding-top: 15%;
@@ -32,7 +33,8 @@ export const BoldText = styled.Text`
 
 export const WrapperInitButton = styled.View`
   align-items: center;
-  padding-bottom: 80px;
+  background-color: #fafafa;
+  padding-bottom: 20px;
 `;
 
 export const InitButton = styled.TouchableOpacity`

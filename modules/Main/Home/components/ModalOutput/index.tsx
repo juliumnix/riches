@@ -82,6 +82,7 @@ export default function ModalOutput({
           </S.WrapperTitle>
           <S.ContainerMoney>
             <S.Money
+              keyboardType="numeric"
               onChangeText={text => {
                 setOutputValue(text);
               }}

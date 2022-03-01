@@ -62,8 +62,8 @@ export default function ConfigScreen() {
 
   const deleteData = async () => {
     try {
-      // await AsyncStorage.removeItem('@riches:id_usuario');
-      navigation.navigate('LoginScreen');
+      await AsyncStorage.removeItem('@riches:id_usuario');
+      navigation.reset({ routes: [{ name: 'AutenticationExitStack' }] });
     } catch (e) {
       // error reading value
     }
@@ -118,6 +118,7 @@ export default function ConfigScreen() {
       </S.Buttons>
       <StatusBar style="auto" />
       <ModalCommon
+        keyboardType="numeric"
         sendData={() => {
           updateBalance();
           setBalanceVisible(false);
@@ -132,6 +133,7 @@ export default function ConfigScreen() {
       />
 
       <ModalCommon
+        keyboardType="default"
         sendData={() => {
           updateName();
           setNameVisible(false);
