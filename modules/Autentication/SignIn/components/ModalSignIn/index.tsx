@@ -108,24 +108,26 @@ export default function ModalSignIn({ visible, closeModal, ...rest }: Props) {
         />
         <S.Container>
           <S.WrapperTitle>
-            <S.Title>Crie sua conta Riches</S.Title>
+            <S.Title testID="Title">Crie sua conta Riches</S.Title>
           </S.WrapperTitle>
           <S.ContainerInputs>
             <S.ContainerInput>
               <S.TitleInputField>Email</S.TitleInputField>
               <S.InfoLoginInput
+                testID="emailInputSignIn"
                 placeholder="Seu email aqui"
                 value={email}
                 onChangeText={setEmail}
               />
               <S.InputBottomBar />
-              <S.ErrorText isActive={showErrorEmail()}>
+              <S.ErrorText testID="ErrorTextSignIn" isActive={showErrorEmail()}>
                 Digite um email válido
               </S.ErrorText>
             </S.ContainerInput>
             <S.ContainerInput>
               <S.TitleInputField>Senha</S.TitleInputField>
               <S.InfoLoginInput
+                testID="passwordInputSignIn"
                 placeholder="********"
                 value={password}
                 onChangeText={setPassword}
@@ -138,7 +140,10 @@ export default function ModalSignIn({ visible, closeModal, ...rest }: Props) {
             </S.ContainerInput>
           </S.ContainerInputs>
           <S.Footer>
-            <S.NextButton onPress={() => signIn(email, password)}>
+            <S.NextButton
+              testID="arrowButtonSignIn"
+              onPress={() => signIn(email, password)}
+            >
               <ArrowSVG />
             </S.NextButton>
           </S.Footer>

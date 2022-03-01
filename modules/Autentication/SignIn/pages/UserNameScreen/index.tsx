@@ -63,11 +63,12 @@ export default function UserNameScreen() {
   };
 
   return (
-    <S.Container>
+    <S.Container testID="CloseInput">
       <S.WrapperContent>
         <S.Title>Como podemos lhe chamar?</S.Title>
         <S.ContainerName>
           <S.Name
+            testID="NameInput"
             placeholder="Primeiro Nome"
             value={name}
             onChangeText={setName}
@@ -79,7 +80,7 @@ export default function UserNameScreen() {
         </S.ContainerName>
       </S.WrapperContent>
       <S.WrapperNextButton>
-        <S.Next onPress={() => updateName()}>
+        <S.Next testID="ArrowButtonUpdateName" onPress={() => updateName()}>
           <ArrowSVG />
         </S.Next>
       </S.WrapperNextButton>

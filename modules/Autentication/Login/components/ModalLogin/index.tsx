@@ -50,10 +50,9 @@ export default function ModalLogin({
         email: email,
         senha: password,
       });
-
       await AsyncStorage.setItem('@riches:id_usuario', response.data);
       setId(response.data);
-      // close();
+
       navigation.reset({ routes: [{ name: 'HomeApp' }] });
     } catch (error) {
       setEmailIncorrect(true);
@@ -107,24 +106,26 @@ export default function ModalLogin({
         />
         <S.Container>
           <S.WrapperTitle>
-            <S.Title>Entre em sua conta Riches</S.Title>
+            <S.Title testID="KKK">Entre em sua conta Riches</S.Title>
           </S.WrapperTitle>
           <S.ContainerInputs>
             <S.ContainerInput>
               <S.TitleInputField>Email</S.TitleInputField>
               <S.InfoLoginInput
+                testID="emailInputLogin"
                 placeholder="Seu email aqui"
                 value={email}
                 onChangeText={setEmail}
               />
               <S.InputBottomBar />
-              <S.ErrorText isActive={showErrorEmail()}>
+              <S.ErrorText testID="ErrorText" isActive={showErrorEmail()}>
                 Digite um email válido
               </S.ErrorText>
             </S.ContainerInput>
             <S.ContainerInput>
               <S.TitleInputField>Senha</S.TitleInputField>
               <S.InfoLoginInput
+                testID="passwordInputLogin"
                 placeholder="********"
                 value={password}
                 onChangeText={setPassword}
@@ -138,6 +139,7 @@ export default function ModalLogin({
           </S.ContainerInputs>
           <S.Footer>
             <S.CreateAccountButtom
+              testID="createAccountButton"
               onPress={function () {
                 openModalSignIn();
                 close();
@@ -146,7 +148,10 @@ export default function ModalLogin({
               <S.CreateAccountText>Criar uma conta</S.CreateAccountText>
               <S.CreateAccountBottomBar></S.CreateAccountBottomBar>
             </S.CreateAccountButtom>
-            <S.NextButton onPress={() => login(email, password)}>
+            <S.NextButton
+              testID="arrowButton"
+              onPress={() => login(email, password)}
+            >
               <ArrowSVG />
             </S.NextButton>
           </S.Footer>

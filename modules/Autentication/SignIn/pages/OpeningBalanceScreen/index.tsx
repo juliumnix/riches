@@ -54,11 +54,12 @@ export default function OpeningBalanceScreen() {
   }
 
   return (
-    <S.Container>
+    <S.Container testID="CloseInputBalanceScreen">
       <S.WrapperContent>
         <S.Title>Qual seu saldo inicial</S.Title>
         <S.ContainerMoney>
           <S.Money
+            testID="inputBalance"
             onChangeText={text => {
               setBalance(Number(text));
             }}
@@ -68,7 +69,7 @@ export default function OpeningBalanceScreen() {
         </S.ContainerMoney>
       </S.WrapperContent>
       <S.WrapperNextButton>
-        <S.Next onPress={() => updateBalance()}>
+        <S.Next testID="UpdateBalanceButton" onPress={() => updateBalance()}>
           <ArrowSVG />
         </S.Next>
       </S.WrapperNextButton>
